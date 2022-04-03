@@ -1,5 +1,5 @@
 const test = require('brittle')
-const Hypercore = require('../')
+const Hypercore = require('..')
 const tmp = require('tmp-promise')
 const { create } = require('./helpers')
 

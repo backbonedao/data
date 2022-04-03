@@ -3,7 +3,7 @@ const ram = require('random-access-memory')
 const crypto = require('hypercore-crypto')
 const codecs = require('codecs')
 
-const Hypercore = require('../')
+const Hypercore = require('..')
 
 test('sessions - can create writable sessions from a read-only core', async function (t) {
   t.plan(5)

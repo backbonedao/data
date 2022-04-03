@@ -1,0 +1,11 @@
+diff --git a/node_modules/noise-curve-ed/index.js b/node_modules/noise-curve-ed/index.js
+index 8d58557..0674953 100644
+--- a/node_modules/noise-curve-ed/index.js
++++ b/node_modules/noise-curve-ed/index.js
+@@ -1,5 +1,5 @@
+ /* eslint-disable camelcase */
+-const sodium = require('sodium-native')
++const sodium = require('sodium-universal')
+ const assert = require('nanoassert')
+ 
+ const DHLEN = sodium.crypto_scalarmult_ed25519_BYTES

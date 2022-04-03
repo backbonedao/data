@@ -5,7 +5,7 @@ const sodium = require('sodium-universal')
 const b4a = require('b4a')
 const { eventFlush, replicate } = require('./helpers')
 
-const Hypercore = require('../')
+const Hypercore = require('..')
 
 test('multisig hypercore', async function (t) {
   t.plan(2)
