@@ -4,8 +4,7 @@
   "description": "core/data",
   "main": "index.js",
   "scripts": {
-    "test": "standard && brittle test/*.js",
-    "postinstall": "patch-package"
+    "test": "standard && brittle test/*.js"
   },
   "repository": {
     "type": "git",
