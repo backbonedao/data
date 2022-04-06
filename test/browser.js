@@ -1,1 +1,1 @@
-require('./browser/dummy')
+require('./browser/basic')
