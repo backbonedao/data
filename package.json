@@ -9,7 +9,8 @@
     "build": "aegir build",
     "test": "aegir test",
     "test:node": "aegir test --target node",
-    "test:browser": "aegir test --target browser"
+    "test:browser": "aegir test --target browser",
+    "test:webworker": "aegir test --target webworker"
   },
   "repository": {
     "type": "git",
