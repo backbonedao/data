@@ -1,7 +1,7 @@
 const { EventEmitter } = require('events')
 const raf = require('random-access-file')
 const isOptions = require('is-options')
-const hypercoreCrypto = require('../backbone-crypto')
+const hypercoreCrypto = require('hypercore-crypto')
 const c = require('compact-encoding')
 const b4a = require('b4a')
 const Xache = require('xache')
