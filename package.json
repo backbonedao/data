@@ -43,7 +43,7 @@
     "lib",
     "test"
   ],
-  "aegir" : {
+  "aegir": {
     "tsRepo": true
   },
   "dependencies": {
@@ -64,6 +64,7 @@
     "random-array-iterator": "^1.0.0",
     "safety-catch": "^1.0.2",
     "sodium-universal": "^3.1.0",
+    "stream": "npm:stream-browserify@^3.0.0",
     "streamx": "^2.12.4",
     "xache": "^1.0.0"
   },
