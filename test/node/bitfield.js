@@ -1,4 +1,4 @@
-const test = require('brittle')
+const test = require('tape')
 const ram = require('random-access-memory')
 const Bitfield = require('../lib/bitfield')
 

@@ -5,7 +5,7 @@ const fsctl = require('fsctl')
 const raf = require('random-access-file')
 const c = require('compact-encoding')
 
-const Oplog = require('../lib/oplog')
+const Oplog = require('../../lib/oplog')
 
 const STORAGE_FILE_NAME = 'oplog-test-storage'
 const STORAGE_FILE_PATH = p.join(__dirname, STORAGE_FILE_NAME)

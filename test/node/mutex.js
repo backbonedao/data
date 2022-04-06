@@ -1,4 +1,4 @@
-const test = require('brittle')
+const test = require('tape')
 const Mutex = require('../lib/mutex')
 
 test('mutex - lock after destroy', async function (t) {

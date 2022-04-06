@@ -7,3 +7,4 @@ sandbox.js
 tmp
 *.log
 __snapshots__
+dist

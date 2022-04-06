@@ -1,8 +1,8 @@
 const test = require('brittle')
 const ram = require('random-access-memory')
 
-const Hypercore = require('..')
-const { create, eventFlush } = require('./helpers')
+const Hypercore = require('../../src')
+const { create, eventFlush } = require('../helpers')
 
 test('basic', async function (t) {
   const core = await create()

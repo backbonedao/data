@@ -1,5 +1,5 @@
-const test = require('brittle')
-const { create, replicate, eventFlush } = require('./helpers')
+const test = require('tape')
+const { create, replicate, eventFlush } = require('../helpers')
 
 test('basic extension', async function (t) {
   const messages = ['world', 'hello']

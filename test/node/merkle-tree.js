@@ -1,4 +1,4 @@
-const test = require('brittle')
+const test = require('tape')
 const Tree = require('../lib/merkle-tree')
 const ram = require('random-access-memory')
 

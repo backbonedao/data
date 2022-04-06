@@ -1,7 +1,7 @@
-const test = require('brittle')
-const Hypercore = require('..')
+const test = require('tape')
+const Hypercore = require('../../src')
 const tmp = require('tmp-promise')
-const { create } = require('./helpers')
+const { create } = require('../helpers')
 
 test('userdata - can set through setUserData', async function (t) {
   const core = await create()

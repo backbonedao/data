@@ -11,11 +11,11 @@ const codecs = require('codecs')
 
 const fsctl = requireMaybe('fsctl') || { lock: noop, sparse: noop }
 
-const Replicator = require('./lib/replicator')
-const Core = require('./lib/core')
-const BlockEncryption = require('./lib/block-encryption')
-const { ReadStream, WriteStream } = require('./lib/streams')
-const { convert0xToHKey } = require('./lib/common')
+const Replicator = require('../lib/replicator')
+const Core = require('../lib/core')
+const BlockEncryption = require('../lib/block-encryption')
+const { ReadStream, WriteStream } = require('../lib/streams')
+const { convert0xToHKey } = require('../lib/common')
 
 const promises = Symbol.for('hypercore.promises')
 const inspect = Symbol.for('nodejs.util.inspect.custom')

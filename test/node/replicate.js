@@ -1,6 +1,6 @@
-const test = require('brittle')
+const test = require('tape')
 const NoiseSecretStream = require('@hyperswarm/secret-stream')
-const { create, replicate, eventFlush } = require('./helpers')
+const { create, replicate, eventFlush } = require('../helpers')
 
 test('basic replication', async function (t) {
   const a = await create()

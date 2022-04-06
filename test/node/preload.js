@@ -1,7 +1,7 @@
 const crypto = require('hypercore-crypto')
-const test = require('brittle')
+const test = require('tape')
 const ram = require('random-access-memory')
-const Hypercore = require('..')
+const Hypercore = require('../../src')
 
 test('preload - storage', async function (t) {
   const core = new Hypercore(null, {

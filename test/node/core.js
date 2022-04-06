@@ -1,6 +1,6 @@
-const test = require('brittle')
+const test = require('tape')
 const RAM = require('random-access-memory')
-const Core = require('../lib/core')
+const Core = require('../../lib/core')
 
 test('core - append', async function (t) {
   const { core } = await create()

@@ -1,8 +1,8 @@
-const test = require('brittle')
+const test = require('tape')
 const sodium = require('sodium-universal')
 const crypto = require('hypercore-crypto')
 const RAM = require('random-access-memory')
-const Hypercore = require('..')
+const Hypercore = require('../../src')
 
 const keyPair = crypto.keyPair(Buffer.alloc(sodium.crypto_sign_SEEDBYTES, 'seed'))
 

@@ -1,5 +1,5 @@
-const test = require('brittle')
-const { create } = require('./helpers')
+const test = require('tape')
+const { create } = require('../helpers')
 
 test('encodings - supports built ins', async function (t) {
   const a = await create(null, { valueEncoding: 'json' })

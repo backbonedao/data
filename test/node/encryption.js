@@ -1,7 +1,7 @@
-const test = require('brittle')
+const test = require('tape')
 const RAM = require('random-access-memory')
-const Hypercore = require('..')
-const { create, replicate } = require('./helpers')
+const Hypercore = require('../../src')
+const { create, replicate } = require('../helpers')
 
 const encryptionKey = Buffer.alloc(32, 'hello world')
 

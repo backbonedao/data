@@ -1,6 +1,6 @@
-const test = require('brittle')
+const test = require('tape')
 
-const { create } = require('./helpers')
+const { create } = require('../helpers')
 
 test('basic read stream', async function (t) {
   const core = await create()

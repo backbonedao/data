@@ -1,11 +1,11 @@
-const test = require('brittle')
+const test = require('tape')
 const ram = require('random-access-memory')
 const crypto = require('hypercore-crypto')
 const sodium = require('sodium-universal')
 const b4a = require('b4a')
-const { eventFlush, replicate } = require('./helpers')
+const { eventFlush, replicate } = require('../helpers')
 
-const Hypercore = require('..')
+const Hypercore = require('../../src')
 
 test('multisig hypercore', async function (t) {
   t.plan(2)
