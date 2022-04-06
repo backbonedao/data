@@ -39,7 +39,7 @@ module.exports = class Hypercore extends EventEmitter {
     if (!opts) opts = {}
 
     if (!opts.crypto && key && key.byteLength !== 65) {
-      throw new Error('Hypercore key should be 65 bytes')
+      throw new Error('Core key should be 65 bytes')
     }
 
     if (!storage) storage = opts.storage
