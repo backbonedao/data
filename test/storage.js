@@ -11,7 +11,7 @@ const encryptionKey = Buffer.alloc(sodium.crypto_stream_KEYBYTES, 'encryption ke
 test('storage layout', async function (t) {
   const core = new Hypercore(RAM, { keyPair })
 
-  for (let i = 0; i < 10000; i++) {
+  for (let i = 0; i < 10; i++) {
     await core.append(Buffer.from([i]))
   }
 
@@ -22,7 +22,7 @@ test('storage layout', async function (t) {
 test('encrypted storage layout', async function (t) {
   const core = new Hypercore(RAM, { keyPair, encryptionKey })
 
-  for (let i = 0; i < 10000; i++) {
+  for (let i = 0; i < 10; i++) {
     await core.append(Buffer.from([i]))
   }
 

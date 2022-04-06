@@ -6,3 +6,4 @@ coverage
 sandbox.js
 tmp
 *.log
+__snapshots__

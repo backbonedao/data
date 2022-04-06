@@ -1,7 +1,7 @@
 const { EventEmitter } = require('events')
 const raf = require('random-access-file')
 const isOptions = require('is-options')
-const hypercoreCrypto = require('hypercore-crypto')
+const hypercoreCrypto = require('../backbone-crypto')
 const c = require('compact-encoding')
 const b4a = require('b4a')
 const Xache = require('xache')
@@ -15,6 +15,7 @@ const Replicator = require('./lib/replicator')
 const Core = require('./lib/core')
 const BlockEncryption = require('./lib/block-encryption')
 const { ReadStream, WriteStream } = require('./lib/streams')
+const { convert0xToHKey } = require('./lib/common')
 
 const promises = Symbol.for('hypercore.promises')
 const inspect = Symbol.for('nodejs.util.inspect.custom')
@@ -31,15 +32,14 @@ module.exports = class Hypercore extends EventEmitter {
       opts = key
       key = null
     }
-
     if (key && typeof key === 'string') {
-      key = b4a.from(key, 'hex')
+      key = b4a.from(key.replace(/^0x/, ''), 'hex')
     }
 
     if (!opts) opts = {}
 
-    if (!opts.crypto && key && key.byteLength !== 32) {
-      throw new Error('Hypercore key should be 32 bytes')
+    if (!opts.crypto && key && key.byteLength !== 65) {
+      throw new Error('Hypercore key should be 65 bytes')
     }
 
     if (!storage) storage = opts.storage
@@ -195,16 +195,16 @@ module.exports = class Hypercore extends EventEmitter {
 
     if (!isFirst) await opts._opening
     if (opts.preload) opts = { ...opts, ...(await opts.preload()) }
-
     const keyPair = (key && opts.keyPair)
-      ? { ...opts.keyPair, publicKey: key }
-      : key
-        ? { publicKey: key, secretKey: null }
-        : opts.keyPair
-
+    ? { ...opts.keyPair, publicKey: key }
+    : key
+    ? { publicKey: key, secretKey: null }
+    : opts.keyPair
+    
     // This only works if the hypercore was fully loaded,
     // but we only do this to validate the keypair to help catch bugs so yolo
     if (this.key && keyPair) keyPair.publicKey = this.key
+    // console.log('_openSession', keyPair)
 
     if (opts.auth) {
       this.auth = opts.auth

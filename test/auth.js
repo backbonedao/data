@@ -21,8 +21,8 @@ test('multisig hypercore', async function (t) {
       return b4a.concat([sig1, sig2])
     },
     verify: (signable, signature) => {
-      const sig1 = signature.subarray(0, 64)
-      const sig2 = signature.subarray(64)
+      const sig1 = signature.subarray(0, 65)
+      const sig2 = signature.subarray(65)
 
       return crypto.verify(signable, sig1, k1.publicKey) &&
         crypto.verify(signable, sig2, k2.publicKey)
@@ -92,8 +92,8 @@ test('multisig hypercore with instance and extension', async function (t) {
     }
 
     verify (signable, signature) {
-      const sig1 = signature.subarray(0, 64)
-      const sig2 = signature.subarray(64)
+      const sig1 = signature.subarray(0, 65)
+      const sig2 = signature.subarray(65)
 
       const key1 = this.localFirst ? this.local : this.remote
       const key2 = this.localFirst ? this.remote : this.local
@@ -233,7 +233,6 @@ test('core using custom sign fn', async function (t) {
   })
 
   await a.ready()
-
   const b = new Hypercore(ram, a.key, { valueEncoding: 'utf-8' })
   await b.ready()
 
