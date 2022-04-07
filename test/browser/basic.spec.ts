@@ -1,33 +1,36 @@
-const test = require('tape')
-const ram = require('random-access-memory')
+import { test } from "@playwright/test"
+const tape = require("tape")
+const ram = require("random-access-memory")
 
-const Hypercore = require('../../src')
-const { create, eventFlush } = require('../helpers')
+const Hypercore = require("../../src")
+const { create, eventFlush } = require("../helpers")
 
-test('basic', async function (t) {
-  const core = await create()
-  let appends = 0
+test("basic", async function () {
+  tape("basic", async function (t) {
+    const core = await create()
+    let appends = 0
 
-  t.is(core.length, 0)
-  t.is(core.byteLength, 0)
-  t.is(core.writable, true)
-  t.is(core.readable, true)
+    t.is(core.length, 0)
+    t.is(core.byteLength, 0)
+    t.is(core.writable, true)
+    t.is(core.readable, true)
 
-  core.on('append', function () {
-    appends++
+    core.on("append", function () {
+      appends++
+    })
+
+    await core.append("hello")
+    await core.append("world")
+
+    t.is(core.length, 2)
+    t.is(core.byteLength, 10)
+    t.is(appends, 2)
+
+    t.end()
   })
-
-  await core.append('hello')
-  await core.append('world')
-
-  t.is(core.length, 2)
-  t.is(core.byteLength, 10)
-  t.is(appends, 2)
-
-  t.end()
 })
 
-test('session', async function (t) {
+/* test('session', async function (t) {
   const core = await create()
 
   const session = core.session()
@@ -201,3 +204,4 @@ test('read ahead', async function (t) {
 
   t.alike(await blk, 'b')
 })
+ */
