@@ -9,7 +9,7 @@
     "build": "aegir build",
     "test": "aegir test",
     "test:node": "aegir test --target node",
-    "test:browser": "aegir test --target browser",
+    "test:browser": "playwright test test/browser/*.spec.ts",
     "test:webworker": "aegir test --target webworker",
     "debug": "playwright test --headed --timeout=0 test/browser/*.ts"
   },
@@ -61,6 +61,7 @@
     "is-options": "^1.0.2",
     "patch-package": "^6.4.7",
     "protomux": "^3.2.1",
+    "purple-tape": "^3.9.2",
     "random-access-file": "^2.2.1",
     "random-array-iterator": "^1.0.0",
     "safety-catch": "^1.0.2",
@@ -73,12 +74,14 @@
     "@playwright/test": "^1.20.2",
     "aegir": "^36.2.3",
     "brittle": "^2.2.12",
+    "browserfs": "^1.4.3",
     "buffer": "^6.0.3",
     "hyperswarm": "github:backbonedao/swarm",
     "playwright": "^1.20.2",
     "random-access-memory": "^4.0.0",
     "standard": "^16.0.4",
-    "tmp-promise": "^3.0.3"
+    "tmp-promise": "^3.0.3",
+    "util.promisify": "^1.1.1"
   },
   "optionalDependencies": {
     "fsctl": "^1.0.0"

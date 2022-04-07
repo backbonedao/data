@@ -1,7 +1,7 @@
 import { test } from "@playwright/test"
-const tape = require("tape")
+const tape = require("purple-tape").test
 const ram = require("random-access-memory")
-
+const b4a = require("b4a")
 const Hypercore = require("../../src")
 const { create, eventFlush } = require("../helpers")
 
@@ -10,10 +10,10 @@ test("basic", async function () {
     const core = await create()
     let appends = 0
 
-    t.is(core.length, 0)
-    t.is(core.byteLength, 0)
-    t.is(core.writable, true)
-    t.is(core.readable, true)
+    t.equal(core.length, 0)
+    t.equal(core.byteLength, 0)
+    t.equal(core.writable, true)
+    t.equal(core.readable, true)
 
     core.on("append", function () {
       appends++
@@ -22,186 +22,208 @@ test("basic", async function () {
     await core.append("hello")
     await core.append("world")
 
-    t.is(core.length, 2)
-    t.is(core.byteLength, 10)
-    t.is(appends, 2)
-
-    t.end()
+    t.equal(core.length, 2)
+    t.equal(core.byteLength, 10)
+    t.equal(appends, 2)
   })
 })
 
-/* test('session', async function (t) {
-  const core = await create()
+test("session", async function () {
+  tape("session", async function (t) {
+    const core = await create()
 
-  const session = core.session()
+    const session = core.session()
 
-  await session.append('test')
-  t.alike(await core.get(0), Buffer.from('test'))
-  t.alike(await session.get(0), Buffer.from('test'))
-  t.end()
-})
+    await session.append("test")
+    t.true(b4a.from("test").equals(await core.get(0)))
+    t.true(b4a.from("test").equals(await session.get(0)))
 
-test('close', async function (t) {
-  const core = await create()
-  await core.append('hello world')
-
-  await core.close()
-
-  try {
-    await core.get(0)
-    t.fail('core should be closed')
-  } catch {
-    t.pass('get threw correctly when core was closed')
-  }
-})
-
-test('close multiple', async function (t) {
-  const core = await create()
-  await core.append('hello world')
-
-  const ev = t.test('events')
-
-  ev.plan(4)
-
-  let i = 0
-
-  core.on('close', () => ev.is(i++, 0, 'on close'))
-  core.close().then(() => ev.is(i++, 1, 'first close'))
-  core.close().then(() => ev.is(i++, 2, 'second close'))
-  core.close().then(() => ev.is(i++, 3, 'third close'))
-
-  await ev
-})
-
-test('storage options', async function (t) {
-  const core = new Hypercore({ storage: ram })
-  await core.append('hello')
-  t.alike(await core.get(0), Buffer.from('hello'))
-  t.end()
-})
-
-test(
-  'allow publicKeys with different byteLength that 32, if opts.crypto were passed',
-  function (t) {
-    const key = Buffer.alloc(33).fill('a')
-
-    const core = new Hypercore(ram, key, { crypto: {} })
-
-    t.is(core.key, key)
-    t.pass('creating a core with more than 32 byteLength key did not throw')
-  }
-)
-
-test('createIfMissing', async function (t) {
-  const core = new Hypercore(ram, { createIfMissing: false })
-
-  t.exception(core.ready())
-})
-
-test('reopen and overwrite', async function (t) {
-  const st = {}
-  const core = new Hypercore(open)
-
-  await core.ready()
-  const key = core.key
-
-  const reopen = new Hypercore(open)
-
-  await reopen.ready()
-  t.alike(reopen.key, key, 'reopened the core')
-
-  const overwritten = new Hypercore(open, { overwrite: true })
-
-  await overwritten.ready()
-  t.unlike(overwritten.key, key, 'overwrote the core')
-
-  function open (name) {
-    if (st[name]) return st[name]
-    st[name] = ram()
-    return st[name]
-  }
-})
-
-test('truncate event has truncated-length and fork', async function (t) {
-  t.plan(2)
-
-  const core = new Hypercore(ram)
-
-  core.on('truncate', function (length, fork) {
-    t.is(length, 2)
-    t.is(fork, 1)
   })
-
-  await core.append(['a', 'b', 'c'])
-  await core.truncate(2)
 })
 
-test('treeHash gets the tree hash at a given core length', async function (t) {
-  const core = new Hypercore(ram)
-  await core.ready()
+test("close", async function () {
+  tape("close", async function (t) {
+    const core = await create()
+    await core.append("hello world")
 
-  const { core: { tree } } = core
+    await core.close()
 
-  const hashes = [tree.hash()]
-
-  for (let i = 1; i < 10; i++) {
-    await core.append([`${i}`])
-    hashes.push(tree.hash())
-  }
-
-  for (let i = 0; i < 10; i++) {
-    t.alike(await core.treeHash(i), hashes[i])
-  }
+    try {
+      await core.get(0)
+      t.fail("core should be closed")
+    } catch {
+      t.pass("get threw correctly when core was closed")
+    }
+  })
 })
 
-test('snapshot locks the state', async function (t) {
-  const core = new Hypercore(ram)
-  await core.ready()
+test("close multiple", async function () {
+  tape("close multiple", async function (t) {
+    const core = await create()
+    await core.append("hello world")
 
-  const a = core.snapshot()
+    /*
+    Note: What is the point of this?
 
-  await core.append('a')
+    const ev = t.test("events")
 
-  t.is(a.length, 0)
-  t.is(core.length, 1)
+    ev.plan(4)
 
-  const b = core.snapshot()
+    let i = 0
 
-  await core.append('c')
+    core.on("close", () => ev.is(i++, 0, "on close"))
+    core.close().then(() => ev.is(i++, 1, "first close"))
+    core.close().then(() => ev.is(i++, 2, "second close"))
+    core.close().then(() => ev.is(i++, 3, "third close")) 
 
-  t.is(a.length, 0)
-  t.is(b.length, 1)
+    await ev
+    */
+     let i = 0
+
+    core.on("close", () => { t.equal(i++, 0, "on close") })
+    await core.close()
+    t.equal(i++, 1, "first close")
+    await core.close()
+    t.equal(i++, 2, "second close")
+    await core.close()
+    t.equal(i++, 3, "third close")
+    t.equal(i, 4)
+  })
 })
 
-test('downloading local range', async function (t) {
-  t.plan(1)
-
-  const core = new Hypercore(ram)
-
-  await core.append('a')
-
-  const range = core.download({ start: 0, end: 1 })
-
-  await eventFlush()
-
-  await range.destroy()
-
-  t.pass('did not throw')
+test("storage options", async function () {
+  tape("storage options", async function (t) {
+    const core = new Hypercore({ storage: ram })
+    await core.append("hello")
+    t.true(b4a.from("hello").equals(await core.get(0)))
+  })
 })
 
-test('read ahead', async function (t) {
-  t.plan(1)
+test("createIfMissing", async function () {
+  tape("createIfMissing", async function (t) {
+    const core = new Hypercore(ram, { createIfMissing: false })
 
-  const core = new Hypercore(ram, { valueEncoding: 'utf-8' })
-
-  await core.append('a')
-
-  const blk = core.get(1, { wait: true }) // readahead
-
-  await eventFlush()
-
-  await core.append('b')
-
-  t.alike(await blk, 'b')
+    t.throws(core.ready())
+  })
 })
- */
+
+test("reopen and overwrite", async function () {
+  tape("reopen and overwrite", async function (t) {
+    const st = {}
+    const core = new Hypercore(open)
+
+    await core.ready()
+    const key = core.key
+
+    const reopen = new Hypercore(open)
+
+    await reopen.ready()
+    t.true(b4a.from(reopen.key).equals(key), "reopened the core")
+
+    const overwritten = new Hypercore(open, { overwrite: true })
+
+    await overwritten.ready()
+    t.false(b4a.from(overwritten.key).equals(key), "overwrote the core")
+
+    function open(name) {
+      if (st[name]) return st[name]
+      st[name] = ram()
+      return st[name]
+    }
+  })
+})
+
+test("truncate event has truncated-length and fork", async function () {
+  tape("truncate event has truncated-length and fork", async function (t) {
+
+    const core = new Hypercore(ram)
+
+    core.on("truncate", function (length, fork) {
+      t.equal(length, 2)
+      t.equal(fork, 1)
+    })
+
+    await core.append(["a", "b", "c"])
+    await core.truncate(2)
+  })
+})
+
+test("treeHash gets the tree hash at a given core length", async function () {
+  tape(
+    "treeHash gets the tree hash at a given core length",
+    async function (t) {
+      const core = new Hypercore(ram)
+      await core.ready()
+
+      const {
+        core: { tree },
+      } = core
+
+      const hashes = [tree.hash()]
+
+      for (let i = 1; i < 10; i++) {
+        await core.append([`${i}`])
+        hashes.push(tree.hash())
+      }
+
+      for (let i = 0; i < 10; i++) {
+        t.true(b4a.from(await core.treeHash(i)).equals(hashes[i]))
+      }
+    }
+  )
+})
+
+test("snapshot locks the state", async function () {
+  tape("snapshot locks the state", async function (t) {
+    const core = new Hypercore(ram)
+    await core.ready()
+
+    const a = core.snapshot()
+
+    await core.append("a")
+
+    t.equal(a.length, 0)
+    t.equal(core.length, 1)
+
+    const b = core.snapshot()
+
+    await core.append("c")
+
+    t.equal(a.length, 0)
+    t.equal(b.length, 1)
+  })
+})
+
+test("downloading local range", async function () {
+  tape("downloading local range", async function (t) {
+
+    const core = new Hypercore(ram)
+
+    await core.append("a")
+
+    const range = core.download({ start: 0, end: 1 })
+
+    await eventFlush()
+
+    await range.destroy()
+
+    t.pass("did not throw")
+  })
+})
+
+test("read ahead", async function () {
+  tape("read ahead", async function (t) {
+
+    const core = new Hypercore(ram, { valueEncoding: "utf-8" })
+
+    await core.append("a")
+
+    const blk = core.get(1, { wait: true }) // readahead
+
+    await eventFlush()
+
+    await core.append("b")
+
+    t.equal(await blk, "b")
+  })
+})

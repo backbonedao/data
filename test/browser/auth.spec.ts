@@ -1,5 +1,5 @@
 import { test } from "@playwright/test"
-const tape = require("tape")
+const tape = require("purple-tape").test
 const ram = require("random-access-memory")
 const crypto = require("hypercore-crypto")
 const sodium = require("sodium-universal")
@@ -10,8 +10,6 @@ const Hypercore = require("../../src")
 
 test("multisig hypercore", async function () {
   tape("multisig hypercore", async function (t) {
-    t.plan(2)
-
     const k1 = crypto.keyPair()
     const k2 = crypto.keyPair()
 
@@ -49,22 +47,19 @@ test("multisig hypercore", async function () {
 
     await a.append(["a", "b", "c", "d", "e"])
 
-    t.is(a.length, 5)
+    t.equal(a.length, 5)
 
     replicate(a, b, t)
 
     const r = b.download({ start: 0, end: a.length })
     await r.downloaded()
 
-    t.is(b.length, 5)
-    t.end()
+    t.equal(b.length, 5)
   })
 })
 
 test("multisig hypercore with instance and extension", async function () {
   tape("multisig hypercore with instance and extension", async function (t) {
-    t.plan(3)
-
     class MultiSigAuth {
       constructor(local, remote, opts = {}) {
         this.local = local
@@ -145,7 +140,7 @@ test("multisig hypercore with instance and extension", async function () {
     })
 
     await eventFlush()
-    t.is(b.peers.length, 1)
+    t.equal(b.peers.length, 1)
 
     const data = "hello"
 
@@ -161,106 +156,102 @@ test("multisig hypercore with instance and extension", async function () {
 
     await a.append("hello")
 
-    t.is(a.length, 1)
+    t.equal(a.length, 1)
 
     const r = b.download({ start: 0, end: a.length })
     await r.downloaded()
 
-    t.is(a.length, 1)
-
-    t.end()
+    t.equal(a.length, 1)
   })
 })
-/* 
-tape('proof-of-work hypercore', async function (t) {
-  t.plan(2)
 
-  const ZEROES = 8
+test("proof-of-work hypercore", async function () {
+  tape("proof-of-work hypercore", async function (t) {
+    const ZEROES = 8
 
-  const auth = {
-    sign: (signable) => {
-      const sig = new Uint8Array(32)
-      const view = new DataView(sig.buffer)
+    const auth = {
+      sign: (signable) => {
+        const sig = new Uint8Array(32)
+        const view = new DataView(sig.buffer)
 
-      for (let i = 0; ;) {
-        view.setUint32(0, i++, true)
-        const buf = hash(signable, sig)
+        for (let i = 0; ; ) {
+          view.setUint32(0, i++, true)
+          const buf = hash(signable, sig)
+
+          let test = 0
+          for (let j = 0; j < ZEROES / 8; j++) test |= buf[j]
+
+          if (test) continue
+          return sig
+        }
+      },
+      verify: (signable, signature) => {
+        const buf = hash(signable, signature)
 
         let test = 0
         for (let j = 0; j < ZEROES / 8; j++) test |= buf[j]
-
-        if (test) continue
-        return sig
-      }
-    },
-    verify: (signable, signature) => {
-      const buf = hash(signable, signature)
-
-      let test = 0
-      for (let j = 0; j < ZEROES / 8; j++) test |= buf[j]
-      return test === 0
+        return test === 0
+      },
     }
-  }
 
-  const a = new Hypercore(ram, null, {
-    valueEncoding: 'utf-8',
-    auth
+    const a = new Hypercore(ram, null, {
+      valueEncoding: "utf-8",
+      auth,
+    })
+
+    await a.ready()
+
+    const b = new Hypercore(ram, a.key, {
+      valueEncoding: "utf-8",
+      auth,
+    })
+
+    await b.ready()
+
+    await a.append(["a", "b", "c", "d", "e"])
+
+    t.equal(a.length, 5)
+
+    replicate(a, b, t)
+
+    const r = b.download({ start: 0, end: a.length })
+    await r.downloaded()
+
+    t.equal(b.length, 5)
   })
-
-  await a.ready()
-
-  const b = new Hypercore(ram, a.key, {
-    valueEncoding: 'utf-8',
-    auth
-  })
-
-  await b.ready()
-
-  await a.append(['a', 'b', 'c', 'd', 'e'])
-
-  t.is(a.length, 5)
-
-  replicate(a, b, t)
-
-  const r = b.download({ start: 0, end: a.length })
-  await r.downloaded()
-
-  t.is(b.length, 5)
 })
 
-tape('core using custom sign fn', async function (t) {
-  t.plan(2)
+test("core using custom sign fn", async function () {
+  tape("core using custom sign fn", async function (t) {
+    const keyPair = crypto.keyPair()
 
-  const keyPair = crypto.keyPair()
+    const a = new Hypercore(ram, null, {
+      valueEncoding: "utf-8",
+      sign: (signable) => crypto.sign(signable, keyPair.secretKey),
+      keyPair: {
+        publicKey: keyPair.publicKey,
+      },
+    })
 
-  const a = new Hypercore(ram, null, {
-    valueEncoding: 'utf-8',
-    sign: (signable) => crypto.sign(signable, keyPair.secretKey),
-    keyPair: {
-      publicKey: keyPair.publicKey
-    }
+    await a.ready()
+    const b = new Hypercore(ram, a.key, { valueEncoding: "utf-8" })
+    await b.ready()
+
+    await a.append(["a", "b", "c", "d", "e"])
+
+    t.equal(a.length, 5)
+
+    replicate(a, b, t)
+
+    const r = b.download({ start: 0, end: a.length })
+    await r.downloaded()
+
+    t.equal(b.length, 5)
   })
-
-  await a.ready()
-  const b = new Hypercore(ram, a.key, { valueEncoding: 'utf-8' })
-  await b.ready()
-
-  await a.append(['a', 'b', 'c', 'd', 'e'])
-
-  t.is(a.length, 5)
-
-  replicate(a, b, t)
-
-  const r = b.download({ start: 0, end: a.length })
-  await r.downloaded()
-
-  t.is(b.length, 5)
-  t.end()
 })
 
-function hash (...data) {
+function hash(...data) {
   const out = b4a.alloc(32)
   sodium.crypto_generichash(out, b4a.concat(data))
   return out
 }
- */
