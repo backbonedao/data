@@ -3,6 +3,7 @@ const tape = require("purple-tape").test
 const ram = require("random-access-memory")
 const Hypercore = require("../../src")
 const crypto = require('hypercore-crypto')
+const b4a = require("b4a")
 
 test("preload - storage", async function () {
   tape("preload - storage", async function (t) {
@@ -31,7 +32,7 @@ test("preload - from another core", async function () {
     })
     await second.ready()
 
-    t.equal(b4a.equals(first.key, second.key))
+    t.ok(b4a.equals(first.key, second.key))
     t.equal(first.sessions, second.sessions)
   })
 })
