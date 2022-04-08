@@ -1,4 +1,4 @@
-import { test } from "@playwright/test"
+import { test, expect } from "@playwright/test"
 const tape = require("purple-tape").test
 const NoiseSecretStream = require("@hyperswarm/secret-stream")
 const { create, replicate, eventFlush } = require("../helpers")

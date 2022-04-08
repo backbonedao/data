@@ -1,4 +1,4 @@
-import { test } from "@playwright/test"
+import { test, expect } from "@playwright/test"
 const tape = require("purple-tape").test
 const { create } = require("../helpers")
 
@@ -27,7 +27,7 @@ test("encodings - supports custom encoding", async function () {
 
     await a.append({ hello: "world" })
     t.equal(await a.get(0), "bar")
-    expect(await a.get(0, { valueEncoding: "utf-8" }).toEqual("foo")
+    expect(await a.get(0, { valueEncoding: "utf-8" })).toEqual("foo")
   })
 })
 

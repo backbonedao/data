@@ -1,7 +1,7 @@
+import { test, expect } from "@playwright/test"
 const p = require("path")
 const BrowserFS = require("browserfs")
 const fs = require("fs")
-import { test } from "@playwright/test"
 const tape = require("purple-tape").test
 const fsctl = require("fsctl")
 const raf = require("random-access-file")

@@ -1,4 +1,4 @@
-import { test } from "@playwright/test"
+import { test, expect } from "@playwright/test"
 const tape = require("purple-tape").test
 const sodium = require("sodium-universal")
 const crypto = require("hypercore-crypto")

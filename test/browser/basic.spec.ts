@@ -1,4 +1,4 @@
-import { test } from "@playwright/test"
+import { test, expect } from "@playwright/test"
 const tape = require("purple-tape").test
 const ram = require("random-access-memory")
 const b4a = require("b4a")
@@ -35,8 +35,8 @@ test("session", async function () {
     const session = core.session()
 
     await session.append("test")
-    t.true(b4a.from("test").equals(await core.get(0)))
-    t.true(b4a.from("test").equals(await session.get(0)))
+    expect(b4a.from("test").equals(await core.get(0))).toBeTruthy()
+    expect(b4a.from("test").equals(await session.get(0))).toBeTruthy()
 
   })
 })
@@ -95,7 +95,7 @@ test("storage options", async function () {
   tape("storage options", async function (t) {
     const core = new Hypercore({ storage: ram })
     await core.append("hello")
-    t.true(b4a.from("hello").equals(await core.get(0)))
+    expect(b4a.from("hello").equals(await core.get(0))).toBeTruthy()
   })
 })
 
@@ -118,7 +118,7 @@ test("reopen and overwrite", async function () {
     const reopen = new Hypercore(open)
 
     await reopen.ready()
-    t.true(b4a.from(reopen.key).equals(key), "reopened the core")
+    expect(b4a.from(reopen.key).equals(key), "reopened the core").toBeTruthy()
 
     const overwritten = new Hypercore(open, { overwrite: true })
 
@@ -167,7 +167,7 @@ test("treeHash gets the tree hash at a given core length", async function () {
       }
 
       for (let i = 0; i < 10; i++) {
-        t.true(b4a.from(await core.treeHash(i)).equals(hashes[i]))
+        expect(b4a.from(await core.treeHash(i)).equals(hashes[i])).toBeTruthy()
       }
     }
   )
