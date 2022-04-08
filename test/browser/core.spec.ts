@@ -10,14 +10,13 @@ test("core - append", async function () {
   {
     const seq = await core.append([b4a.from("hello"), b4a.from("world")])
 
-    t.equal(seq, 0)
-    t.equal(core.tree.length, 2)
-    t.equal(core.tree.byteLength, 10)
-    t.deepEqual(
-      b4a.concat([
+    expect(seq).toBe(0)
+    expect(core.tree.length).toBe(2)
+    expect(core.tree.byteLength).toBe(10)
+    expect(b4a.concat([
         b4a.from(await core.blocks.get(0)),
         b4a.from(await core.blocks.get(1)),
-      ]),
+    ])).toEqual(
       b4a.concat([b4a.from("hello"), b4a.from("world")])
     )
   }
@@ -25,10 +24,10 @@ test("core - append", async function () {
   {
     const seq = await core.append([b4a.from("hej")])
 
-    t.equal(seq, 2)
-    t.equal(core.tree.length, 3)
-    t.equal(core.tree.byteLength, 13)
-    t.true(
+    expect(seq).toBe(2)
+    expect(core.tree.length).toBe(3)
+    expect(core.tree.byteLength).toBe(13)
+    expect(
       b4a
         .from(
           b4a.concat([
@@ -40,7 +39,7 @@ test("core - append", async function () {
         .equals(
           b4a.concat([b4a.from("hello"), b4a.from("world"), b4a.from("hej")])
         )
-    )
+    ).toBeTruthy()
   }
 })
 
@@ -56,10 +55,10 @@ test("core - append and truncate", async function () {
 
   await core.truncate(3, 1)
 
-  t.equal(core.tree.length, 3)
-  t.equal(core.tree.byteLength, 12)
-  t.equal(core.tree.fork, 1)
-  t.deepEqual(core.header.hints.reorgs, [{ from: 0, to: 1, ancestors: 3 }])
+  expect(core.tree.length).toBe(3)
+  expect(core.tree.byteLength).toBe(12)
+  expect(core.tree.fork).toBe(1)
+  expect(core.header.hints.reorgs).toEqual([{ from: 0, to: 1, ancestors: 3 }])
 
   await core.append([
     b4a.from("a"),
@@ -70,17 +69,17 @@ test("core - append and truncate", async function () {
 
   await core.truncate(3, 2)
 
-  t.equal(core.tree.length, 3)
-  t.equal(core.tree.byteLength, 12)
-  t.equal(core.tree.fork, 2)
-  t.deepEqual(core.header.hints.reorgs, [
+  expect(core.tree.length).toBe(3)
+  expect(core.tree.byteLength).toBe(12)
+  expect(core.tree.fork).toBe(2)
+  expect(core.header.hints.reorgs).toEqual([
     { from: 0, to: 1, ancestors: 3 },
     { from: 1, to: 2, ancestors: 3 },
   ])
 
   await core.truncate(2, 3)
 
-  t.deepEqual(core.header.hints.reorgs, [{ from: 2, to: 3, ancestors: 2 }])
+  expect(core.header.hints.reorgs).toEqual([{ from: 2, to: 3, ancestors: 2 }])
 
   await core.append([b4a.from("a")])
   await core.truncate(2, 4)
@@ -94,41 +93,41 @@ test("core - append and truncate", async function () {
   await core.append([b4a.from("a")])
   await core.truncate(2, 7)
 
-  t.equal(core.header.hints.reorgs.length, 4)
+  expect(core.header.hints.reorgs.length).toBe(4)
 
   // check that it was persisted
   const coreReopen = await reopen()
 
-  t.equal(coreReopen.tree.length, 2)
-  t.equal(coreReopen.tree.byteLength, 10)
-  t.equal(coreReopen.tree.fork, 7)
-  t.equal(coreReopen.header.hints.reorgs.length, 4)
+  expect(coreReopen.tree.length).toBe(2)
+  expect(coreReopen.tree.byteLength).toBe(10)
+  expect(coreReopen.tree.fork).toBe(7)
+  expect(coreReopen.header.hints.reorgs.length).toBe(4)
 })
 
 test("core - user data", async function () {
   const { core, reopen } = await create()
 
   await core.userData("hello", b4a.from("world"))
-  t.deepEqual(core.header.userData, [
+  expect(core.header.userData).toEqual([
     { key: "hello", value: b4a.from("world") },
   ])
 
   await core.userData("hej", b4a.from("verden"))
-  t.deepEqual(core.header.userData, [
+  expect(core.header.userData).toEqual([
     { key: "hello", value: b4a.from("world") },
     { key: "hej", value: b4a.from("verden") },
   ])
 
   await core.userData("hello", null)
-  t.deepEqual(core.header.userData, [{ key: "hej", value: b4a.from("verden") }])
+  expect(core.header.userData).toEqual([{ key: "hej", value: b4a.from("verden") }])
 
   await core.userData("hej", b4a.from("world"))
-  t.deepEqual(core.header.userData, [{ key: "hej", value: b4a.from("world") }])
+  expect(core.header.userData).toEqual([{ key: "hej", value: b4a.from("world") }])
 
   // check that it was persisted
   const coreReopen = await reopen()
 
-  t.deepEqual(coreReopen.header.userData, [
+  expect(coreReopen.header.userData).toEqual([
     { key: "hej", value: b4a.from("world") },
   ])
 })
@@ -150,7 +149,7 @@ test("core - verify", async function () {
     await clone.verify(p)
   }
 
-  t.equal(clone.header.tree.length, 2)
+  expect(clone.header.tree.length).toBe(2)
   expect(
     b4a.equals(clone.header.tree.signature, core.header.tree.signature)
   ).toBeTruthy()
@@ -192,7 +191,7 @@ test("core - verify parallel upgrades", async function () {
     await v2
   }
 
-  t.equal(clone.header.tree.length, core.header.tree.length)
+  expect(clone.header.tree.length).toBe(core.header.tree.length)
   expect(
     b4a.equals(clone.header.tree.signature, core.header.tree.signature)
   ).toBeTruthy()
@@ -207,8 +206,8 @@ test("core - update hook is triggered", async function () {
   let ran = 0
 
   core.onupdate = (status, bitfield, value, from) => {
-    t.equal(status, 0b01, "was appended")
-    t.equal(from, null, "was local")
+    expect(status).toBe(0b01)
+    expect(from).toBe(null)
     expect(bitfield).toEqual({ drop: false, start: 0, length: 4 })
     ran |= 1
   }
@@ -223,8 +222,8 @@ test("core - update hook is triggered", async function () {
   const peer = {}
 
   clone.onupdate = (status, bitfield, value, from) => {
-    t.equal(status, 0b01, "was appended")
-    t.equal(from, peer, "was remote")
+    expect(status).toBe(0b01)
+    expect(from).toBe(peer)
     expect(bitfield).toEqual({ drop: false, start: 1, length: 1 })
     expect(value).toEqual(b4a.from("b"))
     ran |= 2
@@ -240,8 +239,8 @@ test("core - update hook is triggered", async function () {
   }
 
   clone.onupdate = (status, bitfield, value, from) => {
-    t.equal(status, 0b00, "no append or truncate")
-    t.equal(from, peer, "was remote")
+    expect(status).toBe(0b00)
+    expect(from).toBe(peer)
     expect(bitfield).toEqual({ drop: false, start: 3, length: 1 })
     expect(value).toEqual(b4a.from("d"))
     ran |= 4
@@ -256,8 +255,8 @@ test("core - update hook is triggered", async function () {
   }
 
   core.onupdate = (status, bitfield, value, from) => {
-    t.equal(status, 0b10, "was truncated")
-    t.equal(from, null, "was local")
+    expect(status).toBe(0b10)
+    expect(from).toBe(null)
     expect(bitfield).toEqual({ drop: true, start: 1, length: 3 })
     ran |= 8
   }
@@ -265,8 +264,8 @@ test("core - update hook is triggered", async function () {
   await core.truncate(1, 1)
 
   core.onupdate = (status, bitfield, value, from) => {
-    t.equal(status, 0b01, "was appended")
-    t.equal(from, null, "was local")
+    expect(status).toBe(0b01)
+    expect(from).toBe(null)
     expect(bitfield).toEqual({ drop: false, start: 1, length: 1 })
     ran |= 16
   }
@@ -274,8 +273,8 @@ test("core - update hook is triggered", async function () {
   await core.append([b4a.from("e")])
 
   clone.onupdate = (status, bitfield, value, from) => {
-    t.equal(status, 0b11, "was appended and truncated")
-    t.equal(from, peer, "was remote")
+    expect(status).toBe(0b11)
+    expect(from).toBe(peer)
     expect(bitfield).toEqual({ drop: true, start: 1, length: 3 })
     ran |= 32
   }
@@ -290,8 +289,8 @@ test("core - update hook is triggered", async function () {
   }
 
   core.onupdate = (status, bitfield, value, from) => {
-    t.equal(status, 0b10, "was truncated")
-    t.equal(from, null, "was local")
+    expect(status).toBe(0b10)
+    expect(from).toBe(null)
     expect(bitfield).toEqual({ drop: true, start: 1, length: 1 })
     ran |= 64
   }
@@ -299,8 +298,8 @@ test("core - update hook is triggered", async function () {
   await core.truncate(1, 2)
 
   clone.onupdate = (status, bitfield, value, from) => {
-    t.equal(status, 0b10, "was truncated")
-    t.equal(from, peer, "was remote")
+    expect(status).toBe(0b10)
+    expect(from).toBe(peer)
     expect(bitfield).toEqual({ drop: true, start: 1, length: 1 })
     ran |= 128
   }
@@ -315,7 +314,7 @@ test("core - update hook is triggered", async function () {
     await clone.reorg(r, peer)
   }
 
-  t.equal(ran, 255, "ran all")
+  expect(ran).toBe(255)
 })
 
 async function create(opts) {

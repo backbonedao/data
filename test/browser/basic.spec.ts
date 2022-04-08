@@ -179,8 +179,6 @@ test("downloading local range", async function () {
   await eventFlush()
 
   await range.destroy()
-
-  t.pass("did not throw")
 })
 
 test("read ahead", async function () {
