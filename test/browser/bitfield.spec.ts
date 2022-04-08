@@ -9,12 +9,12 @@ test("bitfield - set and get", async function () {
 
     expect(b.get(42)).toBeFalsy()
     b.set(42, true)
-    t.ok(b.get(42))
+    expect(b.get(42)).toBeTruthy()
 
     // bigger offsets
     expect(b.get(42000000)).toBeFalsy()
     b.set(42000000, true)
-    t.ok(b.get(42000000))
+    expect(b.get(42000000)).toBeTruthy()
 
     b.set(42000000, false)
     expect(b.get(42000000)).toBeFalsy()
@@ -70,9 +70,9 @@ test("bitfield - reload", async function () {
 
     {
       const b = await Bitfield.open(s)
-      t.ok(b.get(142))
-      t.ok(b.get(40000))
-      t.ok(b.get(1424242424))
+      expect(b.get(142)).toBeTruthy()
+      expect(b.get(40000)).toBeTruthy()
+      expect(b.get(1424242424)).toBeTruthy()
     }
   })
 })

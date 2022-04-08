@@ -319,7 +319,7 @@ test("oplog - log not truncated when header write fails", async function () {
         try {
           await log.flush(Buffer.from("header two"))
         } catch (err) {
-          t.ok(err.synthetic)
+          expect(err.synthetic).toBeTruthy()
         }
 
         {

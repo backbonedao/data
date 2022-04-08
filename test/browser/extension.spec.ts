@@ -10,7 +10,7 @@ test("basic extension", async function () {
     a.registerExtension("test-extension", {
       encoding: "utf-8",
       onmessage: (message, peer) => {
-        t.ok(peer === a.peers[0])
+        expect(peer === a.peers[0]).toBeTruthy()
         expect(message).toBe(messages.pop())
       },
     })
@@ -60,7 +60,7 @@ test("two extensions", async function () {
     a.registerExtension("test-extension-2", {
       encoding: "utf-8",
       onmessage: (message, peer) => {
-        t.ok(peer === a.peers[0])
+        expect(peer === a.peers[0]).toBeTruthy()
         expect(message).toBe(messages.pop())
       },
     })

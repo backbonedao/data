@@ -21,7 +21,7 @@ test("sessions - can create writable sessions from a read-only core", async func
         keyPair: { secretKey: keyPair.secretKey },
       })
       await session.ready()
-      t.ok(session.writable)
+      expect(session.writable).toBeTruthy()
 
       try {
         await core.append("hello")
@@ -61,7 +61,7 @@ test("sessions - writable session with custom sign function", async function () 
         },
       })
 
-      t.ok(session.writable)
+      expect(session.writable).toBeTruthy()
 
       try {
         await core.append("hello")
@@ -127,7 +127,7 @@ test("sessions - auto close", async function () {
     t.false(closed, "not closed yet")
 
     await b.close()
-    t.ok(closed, "all closed")
+    expect(closed, "all closed").toBeTruthy()
   })
 })
 
@@ -147,7 +147,7 @@ test("sessions - auto close different order", async function () {
     t.false(closed, "not closed yet")
 
     await b.close()
-    t.ok(closed, "all closed")
+    expect(closed, "all closed").toBeTruthy()
   })
 })
 
@@ -181,7 +181,7 @@ test("sessions - auto close when using from option", async function () {
       },
     })
     await core2.close()
-    t.ok(core1.closed)
+    expect(core1.closed).toBeTruthy()
   })
 })
 

@@ -468,9 +468,9 @@ test("lowest common ancestor - long fork", async function () {
     expect(ancestors).toBe(5)
     expect(clone.length).toBe(tree.length)
 
-    t.ok(await audit(tree))
+    expect(await audit(tree)).toBeTruthy()
     await tree.flush()
-    t.ok(await audit(tree))
+    expect(await audit(tree)).toBeTruthy()
   })
 })
 

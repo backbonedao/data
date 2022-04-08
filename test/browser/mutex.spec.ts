@@ -145,7 +145,7 @@ test("mutex - error propagates", async function () {
     try {
       await mutex.lock()
     } catch (e) {
-      t.ok(e === err)
+      expect(e === err).toBeTruthy()
     }
 
     expect(resolveCount).toBe(1)

@@ -181,7 +181,7 @@ test("invalid signature fails", async function () {
     const [s1, s2] = replicate(a, b, t)
 
     s1.on("error", (err) => {
-      t.ok(err, "stream closed")
+      expect(err, "stream closed").toBeTruthy()
     })
 
     s2.on("error", (err) => {
@@ -213,7 +213,7 @@ test("invalid capability fails", async function () {
     const [s1, s2] = replicate(a, b, t)
 
     s1.on("error", (err) => {
-      t.ok(err, "stream closed")
+      expect(err, "stream closed").toBeTruthy()
     })
 
     s2.on("error", (err) => {
@@ -349,7 +349,7 @@ test("multiplexing multiple times over the same stream", async function () {
     b1.replicate(n2, { keepAlive: false })
     b1.replicate(n2, { keepAlive: false })
 
-    t.ok(await b1.update(), "update once")
+    expect(await b1.update(), "update once").toBeTruthy()
     t.false(await a1.update(), "writer up to date")
     t.false(await b1.update(), "update again")
 

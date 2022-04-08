@@ -32,7 +32,7 @@ test("preload - from another core", async function () {
     })
     await second.ready()
 
-    t.ok(b4a.equals(first.key, second.key))
+    expect(b4a.equals(first.key, second.key)).toBeTruthy()
     expect(first.sessions).toBe(second.sessions)
   })
 })
@@ -47,8 +47,8 @@ test("preload - custom keypair", async function () {
     })
     await core.ready()
 
-    t.ok(core.writable)
-    t.ok(b4a.equals(core.key, keyPair.publicKey))
+    expect(core.writable).toBeTruthy()
+    expect(b4a.equals(core.key, keyPair.publicKey)).toBeTruthy()
   })
 })
 
@@ -70,7 +70,7 @@ test("preload - sign/storage", async function () {
     })
     await core.ready()
 
-    t.ok(core.writable)
+    expect(core.writable).toBeTruthy()
     await core.append("hello world")
     expect(core.length).toBe(1)
     expect(await core.get(0)).toBe("hello world")
