@@ -31,7 +31,7 @@ test("preload - from another core", async function () {
     })
     await second.ready()
 
-    t.equal(first.key, second.key)
+    t.equal(b4a.equals(first.key, second.key))
     t.equal(first.sessions, second.sessions)
   })
 })
@@ -47,7 +47,7 @@ test("preload - custom keypair", async function () {
     await core.ready()
 
     t.ok(core.writable)
-    t.equal(core.key, keyPair.publicKey)
+    t.ok(b4a.equals(core.key, keyPair.publicKey))
   })
 })
 

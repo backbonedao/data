@@ -165,7 +165,7 @@ test("core - verify", async function () {
       keyPair: { publicKey: core.header.signer.publicKey },
     })
 
-    t.equal(clone.header.signer.publicKey, core.header.signer.publicKey)
+    t.equal(b4a.equals(clone.header.signer.publicKey, core.header.signer.publicKey))
 
     await core.append([b4a.from("a"), b4a.from("b")])
 
@@ -175,7 +175,7 @@ test("core - verify", async function () {
     }
 
     t.equal(clone.header.tree.length, 2)
-    t.equal(clone.header.tree.signature, core.header.tree.signature)
+    t.equal(b4a.equals(clone.header.tree.signature, core.header.tree.signature))
 
     {
       const p = await core.tree.proof({
@@ -194,7 +194,7 @@ test("core - verify parallel upgrades", async function () {
       keyPair: { publicKey: core.header.signer.publicKey },
     })
 
-    t.equal(clone.header.signer.publicKey, core.header.signer.publicKey)
+    t.equal(b4a.equals(clone.header.signer.publicKey, core.header.signer.publicKey))
 
     await core.append([
       b4a.from("a"),
@@ -215,7 +215,7 @@ test("core - verify parallel upgrades", async function () {
     }
 
     t.equal(clone.header.tree.length, core.header.tree.length)
-    t.equal(clone.header.tree.signature, core.header.tree.signature)
+    t.equal(b4a.equals(clone.header.tree.signature, core.header.tree.signature))
   })
 })
 
