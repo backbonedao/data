@@ -546,22 +546,14 @@ test("basic tree seeks", async function () {
 })
 
 test("clear full tree", async function () {
-  tape("clear full tree", async function (t) {
-    const a = await create(5)
+  const a = await create(5)
 
-    expect(a.length).toBe(5)
+  expect(a.length).toBe(5)
 
-    await a.clear()
+  await a.clear()
 
-    expect(a.length).toBe(0)
-
-    try {
-      await a.get(2)
-      t.fail("node should not exist now")
-    } catch {
-      t.pass("node should fail")
-    }
-  })
+  expect(a.length).toBe(0)
+  expect(async () => a.get(2)).toThrow()
 })
 
 test("get older roots", async function () {
@@ -569,7 +561,7 @@ test("get older roots", async function () {
     const a = await create(5)
 
     const roots = await a.getRoots(5)
-    expect(roots).expect(a.roots).toBe("same roots")
+    expect(roots).toEqual(a.roots)
 
     {
       const b = a.batch()
@@ -580,7 +572,7 @@ test("get older roots", async function () {
     }
 
     const oldRoots = await a.getRoots(5)
-    expect(oldRoots).expect(roots).toBe("same old roots")
+    expect(oldRoots).toEqual(roots)
 
     const expected = []
     const len = a.length
@@ -600,7 +592,7 @@ test("get older roots", async function () {
       actual.push(await a.getRoots(len + i))
     }
 
-    expect(actual).expect(expected).toBe("check a bunch of different roots")
+    expect(actual).toEqual(expected)
   })
 })
 

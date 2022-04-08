@@ -42,19 +42,12 @@ test("session", async function () {
 })
 
 test("close", async function () {
-  tape("close", async function (t) {
-    const core = await create()
-    await core.append("hello world")
+  const core = await create()
+  await core.append("hello world")
 
-    await core.close()
+  await core.close()
 
-    try {
-      await core.get(0)
-      t.fail("core should be closed")
-    } catch {
-      t.pass("get threw correctly when core was closed")
-    }
-  })
+  expect(async () => core.get(0)).toThrow()
 })
 
 test("close multiple", async function () {

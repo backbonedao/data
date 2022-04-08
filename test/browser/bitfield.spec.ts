@@ -38,21 +38,13 @@ test("bitfield - random set and gets", async function () {
       const idx = Math.floor(Math.random() * Number.MAX_SAFE_INTEGER)
       const expected = set.has(idx)
       const val = b.get(idx)
-      if (val !== expected) {
-        t.fail("expected " + expected + " but got " + val + " at " + idx)
-        return
-      }
+      expect(val).toBe(expected)
     }
 
     for (const idx of set) {
       const val = b.get(idx)
-      if (val !== true) {
-        t.fail("expected true but got " + val + " at " + idx)
-        return
-      }
+      expect(val).toBe(true)
     }
-
-    t.pass("all random set and gets pass")
   })
 })
 
