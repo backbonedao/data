@@ -8,11 +8,11 @@ module.exports = {
     return core
   },
 
-  replicate (a, b, t) {
+  replicate (a, b) {
     const s1 = a.replicate(true, { keepAlive: false })
     const s2 = b.replicate(false, { keepAlive: false })
-    s1.on('error', err => t.comment(`replication stream error (initiator): ${err}`))
-    s2.on('error', err => t.comment(`replication stream error (responder): ${err}`))
+    s1.on('error', err => { throw new Error(err) })
+    s2.on('error', err => { throw new Error(err) })
     s1.pipe(s2).pipe(s1)
     return [s1, s2]
   },
