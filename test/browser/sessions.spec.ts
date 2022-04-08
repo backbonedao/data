@@ -12,7 +12,7 @@ test("sessions - can create writable sessions from a read-only core", async func
     valueEncoding: "utf-8",
   })
   await core.ready()
-  t.false(core.writable)
+  expect(core.writable).toBeFalsy()
 
   const session = core.session({
     keyPair: { secretKey: keyPair.secretKey },
@@ -20,19 +20,9 @@ test("sessions - can create writable sessions from a read-only core", async func
   await session.ready()
   expect(session.writable).toBeTruthy()
 
-  try {
-    await core.append("hello")
-    t.fail("should not have appended to the read-only core")
-  } catch {
-    t.pass("read-only core append threw correctly")
-  }
+  expect(async () => await core.append("hello")).rejects.toThrow()
 
-  try {
-    await session.append("world")
-    t.pass("session append did not throw")
-  } catch {
-    t.fail("session append should not have thrown")
-  }
+  expect(async () => await session.append("world")).rejects.not.toThrow()
 
   expect(core.length).toBe(1)
 })
@@ -43,7 +33,7 @@ test("sessions - writable session with custom sign function", async function () 
     valueEncoding: "utf-8",
   })
   await core.ready()
-  t.false(core.writable)
+  expect(core.writable).toBeFalsy()
 
   const session = core.session({
     auth: {
@@ -55,20 +45,8 @@ test("sessions - writable session with custom sign function", async function () 
 
   expect(session.writable).toBeTruthy()
 
-  try {
-    await core.append("hello")
-    t.fail("should not have appended to the read-only core")
-  } catch {
-    t.pass("read-only core append threw correctly")
-  }
-
-  try {
-    await session.append("world")
-    t.pass("session append did not throw")
-  } catch {
-    t.fail("session append should not have thrown")
-  }
-
+  expect(async () => await core.append("hello")).rejects.toThrow()
+  expect(async () => await session.append("world")).rejects.not.toThrow()
   expect(core.length).toBe(1)
 })
 
@@ -76,23 +54,17 @@ test("sessions - writable session with invalid keypair throws", async function (
   const keyPair1 = crypto.keyPair()
   const keyPair2 = crypto.keyPair()
 
-  try {
+  {
     const core = new Hypercore(ram, keyPair2.publicKey) // Create a new core in read-only mode.
     const session = core.session({ keyPair: keyPair1 })
-    await session.ready()
-    t.fail("invalid keypair did not throw")
-  } catch {
-    t.pass("invalid keypair threw")
+    expect(async () => session.ready()).rejects.toThrow()
   }
 
-  try {
+  {
     const core = new Hypercore(ram, keyPair1.publicKey, {
       keyPair: keyPair2,
-    }) // eslint-disable-line
-    await core.ready()
-    t.fail("invalid keypair did not throw")
-  } catch {
-    t.pass("invalid keypair threw")
+    })
+    expect(async () => core.ready()).rejects.toThrow()
   }
 })
 
@@ -108,7 +80,7 @@ test("sessions - auto close", async function () {
   const b = core.session()
 
   await a.close()
-  t.false(closed, "not closed yet")
+  expect(closed, "not closed yet").toBeFalsy()
 
   await b.close()
   expect(closed, "all closed").toBeTruthy()
@@ -126,7 +98,7 @@ test("sessions - auto close different order", async function () {
   })
 
   await core.close()
-  t.false(closed, "not closed yet")
+  expect(closed, "not closed yet").toBeFalsy()
 
   await b.close()
   expect(closed, "all closed").toBeTruthy()
@@ -175,7 +147,7 @@ test("sessions - close with from option", async function () {
   })
   await core2.close()
 
-  t.false(core1.closed)
+  expect(core1.closed).toBeFalsy()
   expect(await core1.get(0)).toEqual(Buffer.from("hello world"))
 })
 
@@ -191,18 +163,22 @@ test("sessions - custom valueEncoding on session", async function () {
 })
 
 test("sessions - custom preload hook on first/later sessions", async function () {
+  let called = 0
   const core1 = new Hypercore(ram, {
     preload: () => {
-      t.pass("first hook called")
+      called = 1
       return null
     },
   })
   await core1.ready()
+  expect(called).toBe(1)
+
   const core2 = core1.session({
     preload: () => {
-      t.pass("second hook called")
+      called = 2
       return null
     },
   })
   await core2.ready()
+  expect(called).toBe(2)
 })

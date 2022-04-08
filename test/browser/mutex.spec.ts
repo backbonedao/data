@@ -5,12 +5,7 @@ const Mutex = require("../lib/mutex")
 test("mutex - lock after destroy", async function () {
   const mutex = new Mutex()
   mutex.destroy()
-  try {
-    await mutex.lock()
-    t.fail("should not be able to lock after destroy")
-  } catch {
-    t.pass("lock threw after destroy")
-  }
+  expect(async () => mutex.lock()).rejects.toThrow()
 })
 
 test("mutex - graceful destroy", async function () {

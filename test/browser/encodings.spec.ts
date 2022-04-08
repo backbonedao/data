@@ -25,7 +25,7 @@ test("encodings - supports custom encoding", async function () {
   })
 
   await a.append({ hello: "world" })
-  t.equal(await a.get(0), "bar")
+  expect(await a.get(0)).toBe("bar")
   expect(await a.get(0, { valueEncoding: "utf-8" })).toEqual("foo")
 })
 

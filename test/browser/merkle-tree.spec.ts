@@ -28,10 +28,7 @@ test("proof only block", async function () {
   expect(proof.seek).toBe(null)
   expect(proof.block.index).toBe(4)
   expect(proof.block.nodes.length).toBe(2)
-  t.deepEqual(
-    proof.block.nodes.map((n) => n.index),
-    [10, 13]
-  )
+  expect(proof.block.nodes.map((n) => n.index)).toEqual([10, 13])
 })
 
 test("proof with upgrade", async function () {
@@ -45,20 +42,11 @@ test("proof with upgrade", async function () {
   expect(proof.seek).toBe(null)
   expect(proof.block.index).toBe(4)
   expect(proof.block.nodes.length).toBe(3)
-  t.deepEqual(
-    proof.block.nodes.map((n) => n.index),
-    [10, 13, 3]
-  )
+  expect(proof.block.nodes.map((n) => n.index)).toEqual([10, 13, 3])
   expect(proof.upgrade.start).toBe(0)
   expect(proof.upgrade.length).toBe(10)
-  t.deepEqual(
-    proof.upgrade.nodes.map((n) => n.index),
-    [17]
-  )
-  t.deepEqual(
-    proof.upgrade.additionalNodes.map((n) => n.index),
-    []
-  )
+  expect(proof.upgrade.nodes.map((n) => n.index)).toEqual([17])
+  expect(proof.upgrade.additionalNodes.map((n) => n.index)).toEqual([])
 })
 
 test("proof with upgrade + additional", async function () {
@@ -72,20 +60,11 @@ test("proof with upgrade + additional", async function () {
   expect(proof.seek).toBe(null)
   expect(proof.block.index).toBe(4)
   expect(proof.block.nodes.length).toBe(3)
-  t.deepEqual(
-    proof.block.nodes.map((n) => n.index),
-    [10, 13, 3]
-  )
+  expect(proof.block.nodes.map((n) => n.index)).toEqual([10, 13, 3])
   expect(proof.upgrade.start).toBe(0)
   expect(proof.upgrade.length).toBe(8)
-  t.deepEqual(
-    proof.upgrade.nodes.map((n) => n.index),
-    []
-  )
-  t.deepEqual(
-    proof.upgrade.additionalNodes.map((n) => n.index),
-    [17]
-  )
+  expect(proof.upgrade.nodes.map((n) => n.index)).toEqual([])
+  expect(proof.upgrade.additionalNodes.map((n) => n.index)).toEqual([17])
 })
 
 test("proof with upgrade from existing state", async function () {
@@ -99,20 +78,11 @@ test("proof with upgrade from existing state", async function () {
   expect(proof.seek).toBe(null)
   expect(proof.block.index).toBe(1)
   expect(proof.block.nodes.length).toBe(0)
-  t.deepEqual(
-    proof.block.nodes.map((n) => n.index),
-    []
-  )
+  expect(proof.block.nodes.map((n) => n.index)).toEqual([])
   expect(proof.upgrade.start).toBe(1)
   expect(proof.upgrade.length).toBe(9)
-  t.deepEqual(
-    proof.upgrade.nodes.map((n) => n.index),
-    [5, 11, 17]
-  )
-  t.deepEqual(
-    proof.upgrade.additionalNodes.map((n) => n.index),
-    []
-  )
+  expect(proof.upgrade.nodes.map((n) => n.index)).toEqual([5, 11, 17])
+  expect(proof.upgrade.additionalNodes.map((n) => n.index)).toEqual([])
 })
 
 test("proof with upgrade from existing state + additional", async function () {
@@ -126,20 +96,11 @@ test("proof with upgrade from existing state + additional", async function () {
   expect(proof.seek).toBe(null)
   expect(proof.block.index).toBe(1)
   expect(proof.block.nodes.length).toBe(0)
-  t.deepEqual(
-    proof.block.nodes.map((n) => n.index),
-    []
-  )
+  expect(proof.block.nodes.map((n) => n.index)).toEqual([])
   expect(proof.upgrade.start).toBe(1)
   expect(proof.upgrade.length).toBe(5)
-  t.deepEqual(
-    proof.upgrade.nodes.map((n) => n.index),
-    [5, 9]
-  )
-  t.deepEqual(
-    proof.upgrade.additionalNodes.map((n) => n.index),
-    [13, 17]
-  )
+  expect(proof.upgrade.nodes.map((n) => n.index)).toEqual([5, 9])
+  expect(proof.upgrade.additionalNodes.map((n) => n.index)).toEqual([13, 17])
 })
 
 test("proof block and seek, no upgrade", async function () {
@@ -154,10 +115,7 @@ test("proof block and seek, no upgrade", async function () {
   expect(proof.seek).toBe(null) // seek included in the block
   expect(proof.block.index).toBe(4)
   expect(proof.block.nodes.length).toBe(2)
-  t.deepEqual(
-    proof.block.nodes.map((n) => n.index),
-    [10, 13]
-  )
+  expect(proof.block.nodes.map((n) => n.index)).toEqual([10, 13])
 })
 
 test("proof block and seek #2, no upgrade", async function () {
@@ -172,10 +130,7 @@ test("proof block and seek #2, no upgrade", async function () {
   expect(proof.seek).toBe(null) // seek included in the block
   expect(proof.block.index).toBe(4)
   expect(proof.block.nodes.length).toBe(2)
-  t.deepEqual(
-    proof.block.nodes.map((n) => n.index),
-    [10, 13]
-  )
+  expect(proof.block.nodes.map((n) => n.index)).toEqual([10, 13])
 })
 
 test("proof block and seek #3, no upgrade", async function () {
@@ -187,16 +142,10 @@ test("proof block and seek #3, no upgrade", async function () {
   })
 
   expect(proof.upgrade).toBe(null)
-  t.deepEqual(
-    proof.seek.nodes.map((n) => n.index),
-    [12, 14]
-  )
+  expect(proof.seek.nodes.map((n) => n.index)).toEqual([12, 14])
   expect(proof.block.index).toBe(4)
   expect(proof.block.nodes.length).toBe(1)
-  t.deepEqual(
-    proof.block.nodes.map((n) => n.index),
-    [10]
-  )
+  expect(proof.block.nodes.map((n) => n.index)).toEqual([10])
 })
 
 test("proof block and seek that results in tree, no upgrade", async function () {
@@ -208,14 +157,8 @@ test("proof block and seek that results in tree, no upgrade", async function () 
   })
 
   expect(proof.upgrade).toBe(null)
-  t.deepEqual(
-    proof.block.nodes.map((n) => n.index),
-    [2, 5, 11]
-  )
-  t.deepEqual(
-    proof.seek.nodes.map((n) => n.index),
-    [19, 27]
-  )
+  expect(proof.block.nodes.map((n) => n.index)).toEqual([2, 5, 11])
+  expect(proof.seek.nodes.map((n) => n.index)).toEqual([19, 27])
 })
 
 test("proof block and seek, with upgrade", async function () {
@@ -227,26 +170,14 @@ test("proof block and seek, with upgrade", async function () {
     upgrade: { start: 8, length: 2 },
   })
 
-  t.deepEqual(
-    proof.seek.nodes.map((n) => n.index),
-    [12, 14]
-  )
+  expect(proof.seek.nodes.map((n) => n.index)).toEqual([12, 14])
   expect(proof.block.index).toBe(4)
   expect(proof.block.nodes.length).toBe(1)
-  t.deepEqual(
-    proof.block.nodes.map((n) => n.index),
-    [10]
-  )
+  expect(proof.block.nodes.map((n) => n.index)).toEqual([10])
   expect(proof.upgrade.start).toBe(8)
   expect(proof.upgrade.length).toBe(2)
-  t.deepEqual(
-    proof.upgrade.nodes.map((n) => n.index),
-    [17]
-  )
-  t.deepEqual(
-    proof.upgrade.additionalNodes.map((n) => n.index),
-    []
-  )
+  expect(proof.upgrade.nodes.map((n) => n.index)).toEqual([17])
+  expect(proof.upgrade.additionalNodes.map((n) => n.index)).toEqual([])
 })
 
 test("proof seek with upgrade", async function () {
@@ -257,21 +188,12 @@ test("proof seek with upgrade", async function () {
     upgrade: { start: 0, length: 10 },
   })
 
-  t.deepEqual(
-    proof.seek.nodes.map((n) => n.index),
-    [12, 14, 9, 3]
-  )
+  expect(proof.seek.nodes.map((n) => n.index)).toEqual([12, 14, 9, 3])
   expect(proof.block).toBe(null)
   expect(proof.upgrade.start).toBe(0)
   expect(proof.upgrade.length).toBe(10)
-  t.deepEqual(
-    proof.upgrade.nodes.map((n) => n.index),
-    [17]
-  )
-  t.deepEqual(
-    proof.upgrade.additionalNodes.map((n) => n.index),
-    []
-  )
+  expect(proof.upgrade.nodes.map((n) => n.index)).toEqual([17])
+  expect(proof.upgrade.additionalNodes.map((n) => n.index)).toEqual([])
 })
 
 test("verify proof #1", async function () {
@@ -436,7 +358,7 @@ test("tree hash", async function () {
     expect(b.hash()).toEqual(a.hash())
     b.append(Buffer.from("hi"))
     const h = b.hash()
-    t.notDeepEqual(h, a.hash())
+    expect(h).not.toEqual(a.hash())
     b.commit()
     expect(h).toEqual(a.hash())
   }
@@ -480,8 +402,6 @@ test("basic tree seeks", async function () {
     }
   }
 
-  t.pass("checked all byte seeks")
-
   async function linearSeek(tree, bytes) {
     for (let i = 0; i < tree.length * 2; i += 2) {
       const node = await tree.get(i)
@@ -500,7 +420,7 @@ test("clear full tree", async function () {
   await a.clear()
 
   expect(a.length).toBe(0)
-  expect(async () => a.get(2)).toThrow()
+  expect(async () => a.get(2)).rejects.toThrow()
 })
 
 test("get older roots", async function () {
@@ -622,7 +542,8 @@ async function reorg(local, remote) {
   while (!r.finished) {
     const nodes = r.want.nodes
 
-    await r.update(await remote.proof({ hash: { index, nodes } }))
+    const proof = await remote.proof({ hash: { index, nodes } })
+    await r.update(proof)
   }
 
   r.commit()

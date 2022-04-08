@@ -78,7 +78,6 @@ test("eager replication of updates per default", async function () {
 
   const appended = new Promise((resolve) => {
     b.on("append", function () {
-      t.pass("appended")
       resolve()
     })
   })
@@ -321,11 +320,11 @@ test("multiplexing multiple times over the same stream", async function () {
   b1.replicate(n2, { keepAlive: false })
   b1.replicate(n2, { keepAlive: false })
 
-  expect(await b1.update(), "update once").toBeTruthy()
-  t.false(await a1.update(), "writer up to date")
-  t.false(await b1.update(), "update again")
+  expect(await b1.update()).toBeTruthy()
+  expect(await a1.update()).toBeFalsy()
+  expect(await b1.update()).toBeFalsy()
 
-  expect(b1.length).toBe(a1.length, "same length")
+  expect(b1.length).toBe(a1.length)
 })
 
 test("destroying a stream and re-replicating works", async function () {
@@ -414,7 +413,7 @@ test("get with { wait: false } returns null if block is not available", async fu
 
   replicate(a, b)
 
-  expect(await b.get(0).toBe({ wait: false }), null)
+  expect(await b.get(0, { wait: false })).toBeNull()
   expect(await b.get(0)).toBe("a")
 })
 
@@ -487,9 +486,9 @@ test("can disable downloading from a peer", async function () {
   const b = await create(a.key, { valueEncoding: "utf-8" })
   const c = await create(a.key, { valueEncoding: "utf-8" })
 
-  const [aStream] = replicate(b, a, t)
-  replicate(b, c, t)
-  replicate(a, c, t)
+  const [aStream] = replicate(b, a)
+  replicate(b, c)
+  replicate(a, c)
 
   {
     const r = c.download({ start: 0, end: a.length })
