@@ -24,34 +24,31 @@ function initFS(cb) {
 }
 test("oplog - reset storage", async function () {
   initFS(() => {
-    initFS(() => {
-      tape("oplog - reset storage", async function (t) {
-        // just to make sure to cleanup storage if it failed half way through before
-        if (fs.existsSync(STORAGE_FILE_PATH))
-          await fs.promises.unlink(STORAGE_FILE_PATH)
-        t.pass("data is reset")
-      })
+    tape("oplog - reset storage", async function (t) {
+      // just to make sure to cleanup storage if it failed half way through before
+      if (fs.existsSync(STORAGE_FILE_PATH))
+        await fs.promises.unlink(STORAGE_FILE_PATH)
+      t.pass("data is reset")
     })
   })
 })
 
 test("oplog - basic append", async function () {
   initFS(() => {
-    initFS(() => {
-      tape("oplog - basic append", async function (t) {
-        const storage = testStorage()
+    tape("oplog - basic append", async function (t) {
+      const storage = testStorage()
 
-        const logWr = new Oplog(storage)
+      const logWr = new Oplog(storage)
 
-        await logWr.open()
-        await logWr.flush(Buffer.from("h"))
-        await logWr.append(Buffer.from("a"))
-        await logWr.append(Buffer.from("b"))
+      await logWr.open()
+      await logWr.flush(Buffer.from("h"))
+      await logWr.append(Buffer.from("a"))
+      await logWr.append(Buffer.from("b"))
 
-        const logRd = new Oplog(storage)
+      const logRd = new Oplog(storage)
 
-        {
-          const { header, entries } = await logRd.open()
+      {
+        const { header, entries } = await logRd.open()
 
           expect(header).toEqual(Buffer.from("h"))
           expect(entries.length).toBe(2)
@@ -59,27 +56,26 @@ test("oplog - basic append", async function () {
           expect(entries[1]).toEqual(Buffer.from("b"))
         }
 
-        await logWr.flush(Buffer.from("i"))
+      await logWr.flush(Buffer.from("i"))
 
-        {
-          const { header, entries } = await logRd.open()
+      {
+        const { header, entries } = await logRd.open()
 
           expect(header).toEqual(Buffer.from("i"))
           expect(entries.length).toBe(0)
         }
 
-        await logWr.append(Buffer.from("c"))
+      await logWr.append(Buffer.from("c"))
 
-        {
-          const { header, entries } = await logRd.open()
+      {
+        const { header, entries } = await logRd.open()
 
           expect(header).toEqual(Buffer.from("i"))
           expect(entries.length).toBe(1)
           expect(entries[0]).toEqual(Buffer.from("c"))
         }
 
-        await cleanup(storage)
-      })
+      await cleanup(storage)
     })
   })
 })
