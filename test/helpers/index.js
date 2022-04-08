@@ -18,6 +18,6 @@ module.exports = {
   },
 
   async eventFlush () {
-    // await new Promise(resolve => setImmediate(resolve))
+    await new Promise(resolve => setImmediate(resolve))
   }
 }
