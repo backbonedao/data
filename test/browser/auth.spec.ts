@@ -47,14 +47,14 @@ test("multisig hypercore", async function () {
 
     await a.append(["a", "b", "c", "d", "e"])
 
-    t.equal(a.length, 5)
+    expect(a.length).toBe(5)
 
     replicate(a, b, t)
 
     const r = b.download({ start: 0, end: a.length })
     await r.downloaded()
 
-    t.equal(b.length, 5)
+    expect(b.length).toBe(5)
   })
 })
 
@@ -140,7 +140,7 @@ test("multisig hypercore with instance and extension", async function () {
     })
 
     await eventFlush()
-    t.equal(b.peers.length, 1)
+    expect(b.peers.length).toBe(1)
 
     const data = "hello"
 
@@ -156,12 +156,12 @@ test("multisig hypercore with instance and extension", async function () {
 
     await a.append("hello")
 
-    t.equal(a.length, 1)
+    expect(a.length).toBe(1)
 
     const r = b.download({ start: 0, end: a.length })
     await r.downloaded()
 
-    t.equal(a.length, 1)
+    expect(a.length).toBe(1)
   })
 })
 
@@ -210,14 +210,14 @@ test("proof-of-work hypercore", async function () {
 
     await a.append(["a", "b", "c", "d", "e"])
 
-    t.equal(a.length, 5)
+    expect(a.length).toBe(5)
 
     replicate(a, b, t)
 
     const r = b.download({ start: 0, end: a.length })
     await r.downloaded()
 
-    t.equal(b.length, 5)
+    expect(b.length).toBe(5)
   })
 })
 
@@ -239,14 +239,14 @@ test("core using custom sign fn", async function () {
 
     await a.append(["a", "b", "c", "d", "e"])
 
-    t.equal(a.length, 5)
+    expect(a.length).toBe(5)
 
     replicate(a, b, t)
 
     const r = b.download({ start: 0, end: a.length })
     await r.downloaded()
 
-    t.equal(b.length, 5)
+    expect(b.length).toBe(5)
   })
 })
 

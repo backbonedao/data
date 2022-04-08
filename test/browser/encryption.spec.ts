@@ -14,8 +14,8 @@ test("encrypted append and get", async function () {
 
     await a.append(["hello"])
 
-    t.equal(a.byteLength, 5)
-    t.equal(a.core.tree.byteLength, 5 + a.padding)
+    expect(a.byteLength).toBe(5)
+    expect(a.core.tree.byteLength).toBe(5 + a.padding)
 
     const unencrypted = await a.get(0)
     expect(unencrypted).toEqual(Buffer.from("hello"))

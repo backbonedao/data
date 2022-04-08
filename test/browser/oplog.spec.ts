@@ -54,7 +54,7 @@ test("oplog - basic append", async function () {
           const { header, entries } = await logRd.open()
 
           expect(header).toEqual(Buffer.from("h"))
-          t.equal(entries.length, 2)
+          expect(entries.length).toBe(2)
           expect(entries[0]).toEqual(Buffer.from("a"))
           expect(entries[1]).toEqual(Buffer.from("b"))
         }
@@ -65,7 +65,7 @@ test("oplog - basic append", async function () {
           const { header, entries } = await logRd.open()
 
           expect(header).toEqual(Buffer.from("i"))
-          t.equal(entries.length, 0)
+          expect(entries.length).toBe(0)
         }
 
         await logWr.append(Buffer.from("c"))
@@ -74,7 +74,7 @@ test("oplog - basic append", async function () {
           const { header, entries } = await logRd.open()
 
           expect(header).toEqual(Buffer.from("i"))
-          t.equal(entries.length, 1)
+          expect(entries.length).toBe(1)
           expect(entries[0]).toEqual(Buffer.from("c"))
         }
 
@@ -101,10 +101,10 @@ test("oplog - custom encoding", async function () {
 
       const { header, entries } = await log.open()
 
-      t.equal(header, "one header")
-      t.equal(entries.length, 2)
-      t.equal(entries[0], 42)
-      t.equal(entries[1], 43)
+      expect(header).toBe("one header")
+      expect(entries.length).toBe(2)
+      expect(entries[0]).toBe(42)
+      expect(entries[1]).toBe(43)
 
       await cleanup(storage)
     })
@@ -277,7 +277,7 @@ test("oplog - malformed log entry gets overwritten", async function () {
       {
         const { entries } = await log.open()
 
-        t.equal(entries.length, 2) // The partial entry should not be present
+        expect(entries.length).toBe(2) // The partial entry should not be present
         expect(entries[0]).toEqual(Buffer.from("a"))
         expect(entries[1]).toEqual(Buffer.from("b"))
       }
@@ -288,7 +288,7 @@ test("oplog - malformed log entry gets overwritten", async function () {
       {
         const { entries } = await log.open()
 
-        t.equal(entries.length, 3) // The partial entry should not be present
+        expect(entries.length).toBe(3) // The partial entry should not be present
         expect(entries[0]).toEqual(Buffer.from("a"))
         expect(entries[1]).toEqual(Buffer.from("b"))
         expect(entries[2]).toEqual(Buffer.from("c"))
@@ -326,7 +326,7 @@ test("oplog - log not truncated when header write fails", async function () {
           const { header, entries } = await log.open()
 
           expect(header).toEqual(Buffer.from("header"))
-          t.equal(entries.length, 2)
+          expect(entries.length).toBe(2)
           expect(entries[0]).toEqual(Buffer.from("a"))
           expect(entries[1]).toEqual(Buffer.from("b"))
         }
@@ -339,7 +339,7 @@ test("oplog - log not truncated when header write fails", async function () {
           const { header, entries } = await log.open()
 
           expect(header).toEqual(Buffer.from("header two"))
-          t.equal(entries.length, 0)
+          expect(entries.length).toBe(0)
         }
 
         await cleanup(storage)
@@ -365,8 +365,8 @@ test("oplog - multi append", async function () {
         Buffer.from("4"),
       ])
 
-      t.equal(log.length, 4)
-      t.equal(log.byteLength, 32 + 1 + 2 + 3 + 1)
+      expect(log.length).toBe(4)
+      expect(log.byteLength).toBe(32 + 1 + 2 + 3 + 1)
 
       const { header, entries } = await log.open()
 
@@ -401,8 +401,8 @@ test("oplog - multi append is atomic", async function () {
         Buffer.from("4"),
       ])
 
-      t.equal(log.length, 5)
-      t.equal(log.byteLength, 40 + 1 + 1 + 2 + 3 + 1)
+      expect(log.length).toBe(5)
+      expect(log.byteLength).toBe(40 + 1 + 1 + 2 + 3 + 1)
 
       // Corrupt the last write, should revert the full batch
       await new Promise((resolve, reject) => {
@@ -414,7 +414,7 @@ test("oplog - multi append is atomic", async function () {
 
       const { entries } = await log.open()
 
-      t.equal(log.length, 1)
+      expect(log.length).toBe(1)
       expect(entries).toEqual([Buffer.from("0")])
 
       await cleanup(storage)

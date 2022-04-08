@@ -37,7 +37,7 @@ test("sessions - can create writable sessions from a read-only core", async func
         t.fail("session append should not have thrown")
       }
 
-      t.equal(core.length, 1)
+      expect(core.length).toBe(1)
     }
   )
 })
@@ -77,7 +77,7 @@ test("sessions - writable session with custom sign function", async function () 
         t.fail("session append should not have thrown")
       }
 
-      t.equal(core.length, 1)
+      expect(core.length).toBe(1)
     }
   )
 })
@@ -164,7 +164,7 @@ test("sessions - auto close with all closing", async function () {
     core.on("close", () => closed++)
 
     await Promise.all([core.close(), a.close(), b.close()])
-    t.equal(closed, 3, "all closed")
+    expect(closed).toBe(3, "all closed")
   })
 })
 

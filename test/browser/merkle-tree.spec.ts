@@ -15,7 +15,7 @@ test("nodes", async function () {
 
     b.commit()
 
-    t.equal(await tree.nodes(0), 0)
+    expect(await tree.nodes(0)).toBe(0)
   })
 })
 
@@ -27,10 +27,10 @@ test("proof only block", async function () {
       block: { index: 4, nodes: 2 },
     })
 
-    t.equal(proof.upgrade, null)
-    t.equal(proof.seek, null)
-    t.equal(proof.block.index, 4)
-    t.equal(proof.block.nodes.length, 2)
+    expect(proof.upgrade).toBe(null)
+    expect(proof.seek).toBe(null)
+    expect(proof.block.index).toBe(4)
+    expect(proof.block.nodes.length).toBe(2)
     t.deepEqual(
       proof.block.nodes.map((n) => n.index),
       [10, 13]
@@ -47,15 +47,15 @@ test("proof with upgrade", async function () {
       upgrade: { start: 0, length: 10 },
     })
 
-    t.equal(proof.seek, null)
-    t.equal(proof.block.index, 4)
-    t.equal(proof.block.nodes.length, 3)
+    expect(proof.seek).toBe(null)
+    expect(proof.block.index).toBe(4)
+    expect(proof.block.nodes.length).toBe(3)
     t.deepEqual(
       proof.block.nodes.map((n) => n.index),
       [10, 13, 3]
     )
-    t.equal(proof.upgrade.start, 0)
-    t.equal(proof.upgrade.length, 10)
+    expect(proof.upgrade.start).toBe(0)
+    expect(proof.upgrade.length).toBe(10)
     t.deepEqual(
       proof.upgrade.nodes.map((n) => n.index),
       [17]
@@ -76,15 +76,15 @@ test("proof with upgrade + additional", async function () {
       upgrade: { start: 0, length: 8 },
     })
 
-    t.equal(proof.seek, null)
-    t.equal(proof.block.index, 4)
-    t.equal(proof.block.nodes.length, 3)
+    expect(proof.seek).toBe(null)
+    expect(proof.block.index).toBe(4)
+    expect(proof.block.nodes.length).toBe(3)
     t.deepEqual(
       proof.block.nodes.map((n) => n.index),
       [10, 13, 3]
     )
-    t.equal(proof.upgrade.start, 0)
-    t.equal(proof.upgrade.length, 8)
+    expect(proof.upgrade.start).toBe(0)
+    expect(proof.upgrade.length).toBe(8)
     t.deepEqual(
       proof.upgrade.nodes.map((n) => n.index),
       []
@@ -105,15 +105,15 @@ test("proof with upgrade from existing state", async function () {
       upgrade: { start: 1, length: 9 },
     })
 
-    t.equal(proof.seek, null)
-    t.equal(proof.block.index, 1)
-    t.equal(proof.block.nodes.length, 0)
+    expect(proof.seek).toBe(null)
+    expect(proof.block.index).toBe(1)
+    expect(proof.block.nodes.length).toBe(0)
     t.deepEqual(
       proof.block.nodes.map((n) => n.index),
       []
     )
-    t.equal(proof.upgrade.start, 1)
-    t.equal(proof.upgrade.length, 9)
+    expect(proof.upgrade.start).toBe(1)
+    expect(proof.upgrade.length).toBe(9)
     t.deepEqual(
       proof.upgrade.nodes.map((n) => n.index),
       [5, 11, 17]
@@ -136,15 +136,15 @@ test("proof with upgrade from existing state + additional", async function () {
         upgrade: { start: 1, length: 5 },
       })
 
-      t.equal(proof.seek, null)
-      t.equal(proof.block.index, 1)
-      t.equal(proof.block.nodes.length, 0)
+      expect(proof.seek).toBe(null)
+      expect(proof.block.index).toBe(1)
+      expect(proof.block.nodes.length).toBe(0)
       t.deepEqual(
         proof.block.nodes.map((n) => n.index),
         []
       )
-      t.equal(proof.upgrade.start, 1)
-      t.equal(proof.upgrade.length, 5)
+      expect(proof.upgrade.start).toBe(1)
+      expect(proof.upgrade.length).toBe(5)
       t.deepEqual(
         proof.upgrade.nodes.map((n) => n.index),
         [5, 9]
@@ -166,10 +166,10 @@ test("proof block and seek, no upgrade", async function () {
       block: { index: 4, nodes: 2 },
     })
 
-    t.equal(proof.upgrade, null)
-    t.equal(proof.seek, null) // seek included in the block
-    t.equal(proof.block.index, 4)
-    t.equal(proof.block.nodes.length, 2)
+    expect(proof.upgrade).toBe(null)
+    expect(proof.seek).toBe(null) // seek included in the block
+    expect(proof.block.index).toBe(4)
+    expect(proof.block.nodes.length).toBe(2)
     t.deepEqual(
       proof.block.nodes.map((n) => n.index),
       [10, 13]
@@ -186,10 +186,10 @@ test("proof block and seek #2, no upgrade", async function () {
       block: { index: 4, nodes: 2 },
     })
 
-    t.equal(proof.upgrade, null)
-    t.equal(proof.seek, null) // seek included in the block
-    t.equal(proof.block.index, 4)
-    t.equal(proof.block.nodes.length, 2)
+    expect(proof.upgrade).toBe(null)
+    expect(proof.seek).toBe(null) // seek included in the block
+    expect(proof.block.index).toBe(4)
+    expect(proof.block.nodes.length).toBe(2)
     t.deepEqual(
       proof.block.nodes.map((n) => n.index),
       [10, 13]
@@ -206,13 +206,13 @@ test("proof block and seek #3, no upgrade", async function () {
       block: { index: 4, nodes: 2 },
     })
 
-    t.equal(proof.upgrade, null)
+    expect(proof.upgrade).toBe(null)
     t.deepEqual(
       proof.seek.nodes.map((n) => n.index),
       [12, 14]
     )
-    t.equal(proof.block.index, 4)
-    t.equal(proof.block.nodes.length, 1)
+    expect(proof.block.index).toBe(4)
+    expect(proof.block.nodes.length).toBe(1)
     t.deepEqual(
       proof.block.nodes.map((n) => n.index),
       [10]
@@ -231,7 +231,7 @@ test("proof block and seek that results in tree, no upgrade", async function () 
         block: { index: 0, nodes: 4 },
       })
 
-      t.equal(proof.upgrade, null)
+      expect(proof.upgrade).toBe(null)
       t.deepEqual(
         proof.block.nodes.map((n) => n.index),
         [2, 5, 11]
@@ -258,14 +258,14 @@ test("proof block and seek, with upgrade", async function () {
       proof.seek.nodes.map((n) => n.index),
       [12, 14]
     )
-    t.equal(proof.block.index, 4)
-    t.equal(proof.block.nodes.length, 1)
+    expect(proof.block.index).toBe(4)
+    expect(proof.block.nodes.length).toBe(1)
     t.deepEqual(
       proof.block.nodes.map((n) => n.index),
       [10]
     )
-    t.equal(proof.upgrade.start, 8)
-    t.equal(proof.upgrade.length, 2)
+    expect(proof.upgrade.start).toBe(8)
+    expect(proof.upgrade.length).toBe(2)
     t.deepEqual(
       proof.upgrade.nodes.map((n) => n.index),
       [17]
@@ -290,9 +290,9 @@ test("proof seek with upgrade", async function () {
       proof.seek.nodes.map((n) => n.index),
       [12, 14, 9, 3]
     )
-    t.equal(proof.block, null)
-    t.equal(proof.upgrade.start, 0)
-    t.equal(proof.upgrade.length, 10)
+    expect(proof.block).toBe(null)
+    expect(proof.upgrade.start).toBe(0)
+    expect(proof.upgrade.length).toBe(10)
     t.deepEqual(
       proof.upgrade.nodes.map((n) => n.index),
       [17]
@@ -317,10 +317,10 @@ test("verify proof #1", async function () {
     const b = await clone.verify(p)
     b.commit()
 
-    t.equal(clone.length, tree.length)
-    t.equal(clone.byteLength, tree.byteLength)
-    t.equal(await clone.byteOffset(6), await tree.byteOffset(6))
-    t.equal(await clone.get(6), await tree.get(6))
+    expect(clone.length).toBe(tree.length)
+    expect(clone.byteLength).toBe(tree.byteLength)
+    expect(await clone.byteOffset(6)).toBe(await tree.byteOffset(6))
+    expect(await clone.get(6)).toBe(await tree.get(6))
   })
 })
 
@@ -337,8 +337,8 @@ test("verify proof #2", async function () {
     const b = await clone.verify(p)
     b.commit()
 
-    t.equal(clone.length, tree.length)
-    t.equal(clone.byteLength, tree.byteLength)
+    expect(clone.length).toBe(tree.length)
+    expect(clone.byteLength).toBe(tree.byteLength)
     expect(await clone.byteRange(10)).toEqual(await tree.byteRange(10))
   })
 })
@@ -370,7 +370,7 @@ test("upgrade edgecase when no roots need upgrade", async function () {
       b.commit()
     }
 
-    t.equal(tree.length, 5)
+    expect(tree.length).toBe(5)
   })
 })
 
@@ -380,8 +380,8 @@ test("lowest common ancestor - small gap", async function () {
     const clone = await create(8)
     const ancestors = await reorg(clone, tree)
 
-    t.equal(ancestors, 8)
-    t.equal(clone.length, tree.length)
+    expect(ancestors).toBe(8)
+    expect(clone.length).toBe(tree.length)
   })
 })
 
@@ -391,8 +391,8 @@ test("lowest common ancestor - bigger gap", async function () {
     const clone = await create(1)
     const ancestors = await reorg(clone, tree)
 
-    t.equal(ancestors, 1)
-    t.equal(clone.length, tree.length)
+    expect(ancestors).toBe(1)
+    expect(clone.length).toBe(tree.length)
   })
 })
 
@@ -404,8 +404,8 @@ test("lowest common ancestor - remote is shorter than local", async function () 
       const clone = await create(10)
       const ancestors = await reorg(clone, tree)
 
-      t.equal(ancestors, 5)
-      t.equal(clone.length, tree.length)
+      expect(ancestors).toBe(5)
+      expect(clone.length).toBe(tree.length)
     }
   )
 })
@@ -429,8 +429,8 @@ test("lowest common ancestor - simple fork", async function () {
 
     const ancestors = await reorg(clone, tree)
 
-    t.equal(ancestors, 5)
-    t.equal(clone.length, tree.length)
+    expect(ancestors).toBe(5)
+    expect(clone.length).toBe(tree.length)
   })
 })
 
@@ -465,8 +465,8 @@ test("lowest common ancestor - long fork", async function () {
 
     const ancestors = await reorg(clone, tree)
 
-    t.equal(ancestors, 5)
-    t.equal(clone.length, tree.length)
+    expect(ancestors).toBe(5)
+    expect(clone.length).toBe(tree.length)
 
     t.ok(await audit(tree))
     await tree.flush()
@@ -517,8 +517,8 @@ test("basic tree seeks", async function () {
       b.commit()
     }
 
-    t.equal(a.length, 10)
-    t.equal(a.byteLength, 33)
+    expect(a.length).toBe(10)
+    expect(a.byteLength).toBe(33)
 
     for (let i = 0; i < a.byteLength; i++) {
       const s = a.seek(i)
@@ -527,7 +527,7 @@ test("basic tree seeks", async function () {
       const expected = await linearSeek(a, i)
 
       if (actual[0] !== expected[0] || actual[1] !== expected[1]) {
-        t.equal(actual, expected, "bad seek at " + i)
+        expect(actual).toBe(expected, "bad seek at " + i)
         return
       }
     }
@@ -549,11 +549,11 @@ test("clear full tree", async function () {
   tape("clear full tree", async function (t) {
     const a = await create(5)
 
-    t.equal(a.length, 5)
+    expect(a.length).toBe(5)
 
     await a.clear()
 
-    t.equal(a.length, 0)
+    expect(a.length).toBe(0)
 
     try {
       await a.get(2)
@@ -569,7 +569,7 @@ test("get older roots", async function () {
     const a = await create(5)
 
     const roots = await a.getRoots(5)
-    expect(roots).toEqual(a.roots, "same roots")
+    expect(roots).expect(a.roots).toBe("same roots")
 
     {
       const b = a.batch()
@@ -580,7 +580,7 @@ test("get older roots", async function () {
     }
 
     const oldRoots = await a.getRoots(5)
-    expect(oldRoots).toEqual(roots, "same old roots")
+    expect(oldRoots).expect(roots).toBe("same old roots")
 
     const expected = []
     const len = a.length
@@ -600,7 +600,7 @@ test("get older roots", async function () {
       actual.push(await a.getRoots(len + i))
     }
 
-    expect(actual).toEqual(expected, "check a bunch of different roots")
+    expect(actual).expect(expected).toBe("check a bunch of different roots")
   })
 })
 
@@ -611,12 +611,12 @@ test("check if a length is upgradeable", async function () {
 
     // Full clone, has it all
 
-    t.equal(await tree.upgradeable(0), true)
-    t.equal(await tree.upgradeable(1), true)
-    t.equal(await tree.upgradeable(2), true)
-    t.equal(await tree.upgradeable(3), true)
-    t.equal(await tree.upgradeable(4), true)
-    t.equal(await tree.upgradeable(5), true)
+    expect(await tree.upgradeable(0)).toBe(true)
+    expect(await tree.upgradeable(1)).toBe(true)
+    expect(await tree.upgradeable(2)).toBe(true)
+    expect(await tree.upgradeable(3)).toBe(true)
+    expect(await tree.upgradeable(4)).toBe(true)
+    expect(await tree.upgradeable(5)).toBe(true)
 
     const p = await tree.proof({
       upgrade: { start: 0, length: 5 },
@@ -641,12 +641,12 @@ test("check if a length is upgradeable", async function () {
     So length = 0, length = 4 (node 3) and length = 5 (node 8 + 3) should be upgradeable
   */
 
-    t.equal(await clone.upgradeable(0), true)
-    t.equal(await clone.upgradeable(1), false)
-    t.equal(await clone.upgradeable(2), false)
-    t.equal(await clone.upgradeable(3), false)
-    t.equal(await clone.upgradeable(4), true)
-    t.equal(await clone.upgradeable(5), true)
+    expect(await clone.upgradeable(0)).toBe(true)
+    expect(await clone.upgradeable(1)).toBe(false)
+    expect(await clone.upgradeable(2)).toBe(false)
+    expect(await clone.upgradeable(3)).toBe(false)
+    expect(await clone.upgradeable(4)).toBe(true)
+    expect(await clone.upgradeable(5)).toBe(true)
   })
 })
 

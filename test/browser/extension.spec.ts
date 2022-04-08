@@ -11,7 +11,7 @@ test("basic extension", async function () {
       encoding: "utf-8",
       onmessage: (message, peer) => {
         t.ok(peer === a.peers[0])
-        t.equal(message, messages.pop())
+        expect(message).toBe(messages.pop())
       },
     })
 
@@ -23,7 +23,7 @@ test("basic extension", async function () {
     replicate(a, b, t)
 
     await eventFlush()
-    t.equal(b.peers.length, 1)
+    expect(b.peers.length).toBe(1)
 
     bExt.send("hello", b.peers[0])
     bExt.send("world", b.peers[0])
@@ -51,7 +51,7 @@ test("two extensions", async function () {
     })
 
     await eventFlush()
-    t.equal(b.peers.length, 1)
+    expect(b.peers.length).toBe(1)
 
     bExt2.send("world", b.peers[0])
 
@@ -61,14 +61,14 @@ test("two extensions", async function () {
       encoding: "utf-8",
       onmessage: (message, peer) => {
         t.ok(peer === a.peers[0])
-        t.equal(message, messages.pop())
+        expect(message).toBe(messages.pop())
       },
     })
 
     bExt2.send("hello", b.peers[0])
 
     await eventFlush()
-    t.equal(messages.length, 1) // First message gets ignored
+    expect(messages.length).toBe(1) // First message gets ignored
 
   })
 })

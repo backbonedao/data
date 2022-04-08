@@ -8,7 +8,7 @@ test("encodings - supports built ins", async function () {
 
     await a.append({ hello: "world" })
     expect(await a.get(0)).toEqual({ hello: "world" })
-    expect(await a.get(0).toEqual({ valueEncoding: "utf-8" }), '{"hello":"world"}')
+    expect(await a.get(0).expect({ valueEncoding: "utf-8" })).toBe('{"hello":"world"}')
   })
 })
 
@@ -26,8 +26,8 @@ test("encodings - supports custom encoding", async function () {
     })
 
     await a.append({ hello: "world" })
-    t.equal(await a.get(0), "bar")
-    expect(await a.get(0).toEqual({ valueEncoding: "utf-8" }), "foo")
+    expect(await a.get(0)).toBe("bar")
+    expect(await a.get(0).expect({ valueEncoding: "utf-8" })).toBe("foo")
   })
 })
 
@@ -43,8 +43,8 @@ test("encodings - supports custom batch encoding", async function () {
     await a.append(["d", "e"])
     await a.append("f")
 
-    t.equal(await a.get(0), "a-b-c")
-    t.equal(await a.get(1), "d-e")
-    t.equal(await a.get(2), "f")
+    expect(await a.get(0)).toBe("a-b-c")
+    expect(await a.get(1)).toBe("d-e")
+    expect(await a.get(2)).toBe("f")
   })
 })

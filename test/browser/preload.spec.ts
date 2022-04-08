@@ -15,7 +15,7 @@ test("preload - storage", async function () {
     await core.ready()
 
     await core.append("hello world")
-    t.equal(core.length, 1)
+    expect(core.length).toBe(1)
     expect(await core.get(0)).toEqual(Buffer.from("hello world"))
   })
 })
@@ -33,7 +33,7 @@ test("preload - from another core", async function () {
     await second.ready()
 
     t.ok(b4a.equals(first.key, second.key))
-    t.equal(first.sessions, second.sessions)
+    expect(first.sessions).toBe(second.sessions)
   })
 })
 
@@ -72,7 +72,7 @@ test("preload - sign/storage", async function () {
 
     t.ok(core.writable)
     await core.append("hello world")
-    t.equal(core.length, 1)
-    t.equal(await core.get(0), "hello world")
+    expect(core.length).toBe(1)
+    expect(await core.get(0)).toBe("hello world")
   })
 })

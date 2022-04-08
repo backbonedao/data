@@ -31,7 +31,7 @@ test("mutex - graceful destroy", async function () {
 
     await destroyed
 
-    t.equal(resolveCount, 5)
+    expect(resolveCount).toBe(5)
   })
 })
 test("mutex - quick destroy", async function () {
@@ -56,8 +56,8 @@ test("mutex - quick destroy", async function () {
 
     await destroyed
 
-    t.equal(resolveCount, 1)
-    t.equal(rejectCount, 4)
+    expect(resolveCount).toBe(1)
+    expect(rejectCount).toBe(4)
   })
 })
 
@@ -84,8 +84,8 @@ test("mutex - graceful then quick destroy", async function () {
 
     await destroyed
 
-    t.equal(resolveCount, 1)
-    t.equal(rejectCount, 4)
+    expect(resolveCount).toBe(1)
+    expect(rejectCount).toBe(4)
   })
 })
 
@@ -106,8 +106,8 @@ test("mutex - quick destroy with re-entry", async function () {
 
     await destroyed
 
-    t.equal(resolveCount, 1)
-    t.equal(rejectCount, 4)
+    expect(resolveCount).toBe(1)
+    expect(rejectCount).toBe(4)
 
     async function lock() {
       try {
@@ -148,7 +148,7 @@ test("mutex - error propagates", async function () {
       t.ok(e === err)
     }
 
-    t.equal(resolveCount, 1)
+    expect(resolveCount).toBe(1)
     expect(rejectErrors).toEqual([err, err, err, err])
   })
 })

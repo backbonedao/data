@@ -10,10 +10,10 @@ test("basic", async function () {
     const core = await create()
     let appends = 0
 
-    t.equal(core.length, 0)
-    t.equal(core.byteLength, 0)
-    t.equal(core.writable, true)
-    t.equal(core.readable, true)
+    expect(core.length).toBe(0)
+    expect(core.byteLength).toBe(0)
+    expect(core.writable).toBe(true)
+    expect(core.readable).toBe(true)
 
     core.on("append", function () {
       appends++
@@ -22,9 +22,9 @@ test("basic", async function () {
     await core.append("hello")
     await core.append("world")
 
-    t.equal(core.length, 2)
-    t.equal(core.byteLength, 10)
-    t.equal(appends, 2)
+    expect(core.length).toBe(2)
+    expect(core.byteLength).toBe(10)
+    expect(appends).toBe(2)
   })
 })
 
@@ -80,14 +80,14 @@ test("close multiple", async function () {
     */
      let i = 0
 
-    core.on("close", () => { t.equal(i++, 0, "on close") })
+    core.on("close", () => { expect(i++).toBe(0, "on close") })
     await core.close()
-    t.equal(i++, 1, "first close")
+    expect(i++).toBe(1, "first close")
     await core.close()
-    t.equal(i++, 2, "second close")
+    expect(i++).toBe(2, "second close")
     await core.close()
-    t.equal(i++, 3, "third close")
-    t.equal(i, 4)
+    expect(i++).toBe(3, "third close")
+    expect(i).toBe(4)
   })
 })
 
@@ -139,8 +139,8 @@ test("truncate event has truncated-length and fork", async function () {
     const core = new Hypercore(ram)
 
     core.on("truncate", function (length, fork) {
-      t.equal(length, 2)
-      t.equal(fork, 1)
+      expect(length).toBe(2)
+      expect(fork).toBe(1)
     })
 
     await core.append(["a", "b", "c"])
@@ -182,15 +182,15 @@ test("snapshot locks the state", async function () {
 
     await core.append("a")
 
-    t.equal(a.length, 0)
-    t.equal(core.length, 1)
+    expect(a.length).toBe(0)
+    expect(core.length).toBe(1)
 
     const b = core.snapshot()
 
     await core.append("c")
 
-    t.equal(a.length, 0)
-    t.equal(b.length, 1)
+    expect(a.length).toBe(0)
+    expect(b.length).toBe(1)
   })
 })
 
@@ -224,6 +224,6 @@ test("read ahead", async function () {
 
     await core.append("b")
 
-    t.equal(await blk, "b")
+    expect(await blk).toBe("b")
   })
 })

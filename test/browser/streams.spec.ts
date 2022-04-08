@@ -15,7 +15,7 @@ test("basic read stream", async function () {
       expect(data.toString()).toEqual(expected.shift())
     }
 
-    t.equal(expected.length, 0)
+    expect(expected.length).toBe(0)
   })
 })
 
@@ -34,7 +34,7 @@ test("read stream with start / end", async function () {
         expect(data.toString()).toEqual(expected.shift())
       }
 
-      t.equal(expected.length, 0)
+      expect(expected.length).toBe(0)
     }
 
     {
@@ -44,7 +44,7 @@ test("read stream with start / end", async function () {
         expect(data.toString()).toEqual(expected.shift())
       }
 
-      t.equal(expected.length, 0)
+      expect(expected.length).toBe(0)
     }
   })
 })
@@ -66,6 +66,6 @@ test("basic write+read stream", async function () {
       expect(data.toString()).toEqual(expected.shift())
     }
 
-    t.equal(expected.length, 0)
+    expect(expected.length).toBe(0)
   })
 })

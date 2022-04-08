@@ -20,7 +20,7 @@ test("basic replication", async function () {
 
     await r.downloaded()
 
-    t.equal(d, 5)
+    expect(d).toBe(5)
   })
 })
 
@@ -32,7 +32,7 @@ test("basic replication from fork", async function () {
     await a.truncate(4)
     await a.append("e")
 
-    t.equal(a.fork, 1)
+    expect(a.fork).toBe(1)
 
     const b = await create(a.key)
 
@@ -45,8 +45,8 @@ test("basic replication from fork", async function () {
 
     await r.downloaded()
 
-    t.equal(d, 5)
-    t.equal(a.fork, b.fork)
+    expect(d).toBe(5)
+    expect(a.fork).toBe(b.fork)
   })
 })
 
@@ -61,7 +61,7 @@ test("eager replication from bigger fork", async function () {
     await a.truncate(4)
     await a.append(["FORKED", "g", "h", "i", "j", "k"])
 
-    t.equal(a.fork, 1)
+    expect(a.fork).toBe(1)
 
     let d = 0
     b.on("download", (index) => {
@@ -71,8 +71,8 @@ test("eager replication from bigger fork", async function () {
     const r = b.download({ start: 0, end: a.length })
     await r.downloaded()
 
-    t.equal(d, a.length)
-    t.equal(a.fork, b.fork)
+    expect(d).toBe(a.length)
+    expect(a.fork).toBe(b.fork)
   })
 })
 
@@ -113,8 +113,8 @@ test("bigger download range", async function () {
     const r = b.download({ start: 0, end: a.length })
     await r.downloaded()
 
-    t.equal(b.length, a.length, "same length")
-    t.equal(downloaded.size, a.length, "downloaded all")
+    expect(b.length).toBe(a.length, "same length")
+    expect(downloaded.size).toBe(a.length, "downloaded all")
 
   })
 })
@@ -155,9 +155,9 @@ test("high latency reorg", async function () {
       if (ba.equals(bb)) same++
     }
 
-    t.equal(a.fork, 1)
-    t.equal(a.fork, b.fork)
-    t.equal(same, 80)
+    expect(a.fork).toBe(1)
+    expect(a.fork).toBe(b.fork)
+    expect(same).toBe(80)
   })
 })
 
@@ -185,7 +185,7 @@ test("invalid signature fails", async function () {
     })
 
     s2.on("error", (err) => {
-      t.equal(err.message, "Remote signature does not match")
+      expect(err.message).toBe("Remote signature does not match")
     })
 
     return new Promise((resolve) => {
@@ -217,7 +217,7 @@ test("invalid capability fails", async function () {
     })
 
     s2.on("error", (err) => {
-      t.equal(err.message, "Remote sent an invalid capability")
+      expect(err.message).toBe("Remote sent an invalid capability")
     })
 
     return new Promise((resolve) => {
@@ -241,7 +241,7 @@ test("update with zero length", async function () {
     replicate(a, b, t)
 
     await b.update() // should not hang
-    t.equal(b.length, 0)
+    expect(b.length).toBe(0)
   })
 })
 
@@ -288,7 +288,7 @@ test("async multiplexing", async function () {
 
     await new Promise((resolve) => b2.once("peer-add", resolve))
 
-    t.equal(b2.peers.length, 1)
+    expect(b2.peers.length).toBe(1)
     expect(await b2.get(0)).toEqual(Buffer.from("ho"))
   })
 })
@@ -353,7 +353,7 @@ test("multiplexing multiple times over the same stream", async function () {
     t.false(await a1.update(), "writer up to date")
     t.false(await b1.update(), "update again")
 
-    t.equal(b1.length, a1.length, "same length")
+    expect(b1.length).toBe(a1.length, "same length")
   })
 })
 
@@ -392,7 +392,7 @@ test("destroying a stream and re-replicating works", async function () {
 
     const blocks = await Promise.all(all)
 
-    t.equal(blocks.length, 33, "downloaded 33 blocks")
+    expect(blocks.length).toBe(33, "downloaded 33 blocks")
   })
 })
 
@@ -412,7 +412,7 @@ test("replicate discrete range", async function () {
     const r = b.download({ blocks: [0, 2, 3] })
     await r.downloaded()
 
-    t.equal(d, 3)
+    expect(d).toBe(3)
     expect(await b.get(0)).toEqual(Buffer.from("a"))
     expect(await b.get(2)).toEqual(Buffer.from("c"))
     expect(await b.get(3)).toEqual(Buffer.from("d"))
@@ -436,7 +436,7 @@ test("replicate discrete empty range", async function () {
 
     await r.downloaded()
 
-    t.equal(d, 0)
+    expect(d).toBe(0)
   })
 })
 
@@ -452,8 +452,8 @@ test("get with { wait: false } returns null if block is not available", async fu
 
       replicate(a, b, t)
 
-      t.equal(await b.get(0, { wait: false }), null)
-      t.equal(await b.get(0), "a")
+      expect(await b.get(0).toBe({ wait: false }), null)
+      expect(await b.get(0)).toBe("a")
     }
   )
 })
@@ -476,8 +476,8 @@ test("request cancellation regression", async function () {
 
     await b.close()
 
-    t.equal(b.activeRequests.length, 0)
-    t.equal(errored, 3)
+    expect(b.activeRequests.length).toBe(0)
+    expect(errored).toBe(3)
 
     function onerror() {
       errored++
@@ -492,7 +492,7 @@ test("findingPeers makes update wait for first peer", async function () {
 
     await a.append("hi")
 
-    t.equal(await b.update(), false)
+    expect(await b.update()).toBe(false)
 
     const done = b.findingPeers()
 
@@ -501,7 +501,7 @@ test("findingPeers makes update wait for first peer", async function () {
 
     replicate(a, b, t)
 
-    t.equal(await u, true)
+    expect(await u).toBe(true)
     done()
   })
 })
@@ -515,7 +515,7 @@ test("findingPeers + done makes update return false if no peers", async function
 
       await a.append("hi")
 
-      t.equal(await b.update(), false)
+      expect(await b.update()).toBe(false)
 
       const done = b.findingPeers()
 
@@ -523,7 +523,7 @@ test("findingPeers + done makes update return false if no peers", async function
       await eventFlush()
 
       done()
-      t.equal(await u, false)
+      expect(await u).toBe(false)
     }
   )
 })
@@ -566,7 +566,7 @@ test.skip("can disable downloading from a peer", async function () {
       await r.downloaded()
     }
 
-    t.equal(aUploads, 0)
-    t.equal(cUploads, a.length)
+    expect(aUploads).toBe(0)
+    expect(cUploads).toBe(a.length)
   })
 })
