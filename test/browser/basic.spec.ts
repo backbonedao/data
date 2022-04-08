@@ -42,7 +42,7 @@ test("close", async function () {
 
   await core.close()
 
-  expect(async () => core.get(0)).toThrow()
+  expect(async () => core.get(0)).rejects.toThrow()
 })
 
 test("close multiple", async function () {
@@ -68,14 +68,14 @@ test("close multiple", async function () {
   let i = 0
 
   core.on("close", () => {
-    expect(i++).toBe(0, "on close")
+    expect(i++).toBe(0)
   })
   await core.close()
-  expect(i++).toBe(1, "first close")
+  expect(i++).toBe(1)
   await core.close()
-  expect(i++).toBe(2, "second close")
+  expect(i++).toBe(2)
   await core.close()
-  expect(i++).toBe(3, "third close")
+  expect(i++).toBe(3)
   expect(i).toBe(4)
 })
 
@@ -88,7 +88,7 @@ test("storage options", async function () {
 test("createIfMissing", async function () {
   const core = new Hypercore(ram, { createIfMissing: false })
 
-  t.throws(core.ready())
+  expect(async () => core.ready()).rejects.toThrow()
 })
 
 test("reopen and overwrite", async function () {
