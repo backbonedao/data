@@ -10,7 +10,7 @@ test("encrypted append and get", async function () {
   tape("encrypted append and get", async function (t) {
     const a = await create({ encryptionKey })
 
-    t.deepEqual(a.encryptionKey, encryptionKey)
+    expect(a.encryptionKey).toEqual(encryptionKey)
 
     await a.append(["hello"])
 
@@ -18,7 +18,7 @@ test("encrypted append and get", async function () {
     t.equal(a.core.tree.byteLength, 5 + a.padding)
 
     const unencrypted = await a.get(0)
-    t.deepEqual(unencrypted, Buffer.from("hello"))
+    expect(unencrypted).toEqual(Buffer.from("hello"))
 
     const encrypted = await a.core.blocks.get(0)
     t.false(encrypted.includes("hello"))
@@ -31,14 +31,14 @@ test("encrypted seek", async function () {
 
     await a.append(["hello", "world", "!"])
 
-    t.deepEqual(await a.seek(0), [0, 0])
-    t.deepEqual(await a.seek(4), [0, 4])
-    t.deepEqual(await a.seek(5), [1, 0])
-    t.deepEqual(await a.seek(6), [1, 1])
-    t.deepEqual(await a.seek(6), [1, 1])
-    t.deepEqual(await a.seek(9), [1, 4])
-    t.deepEqual(await a.seek(10), [2, 0])
-    t.deepEqual(await a.seek(11), [3, 0])
+    expect(await a.seek(0)).toEqual([0, 0])
+    expect(await a.seek(4)).toEqual([0, 4])
+    expect(await a.seek(5)).toEqual([1, 0])
+    expect(await a.seek(6)).toEqual([1, 1])
+    expect(await a.seek(6)).toEqual([1, 1])
+    expect(await a.seek(9)).toEqual([1, 4])
+    expect(await a.seek(10)).toEqual([2, 0])
+    expect(await a.seek(11)).toEqual([3, 0])
   })
 })
 
@@ -56,13 +56,13 @@ test("encrypted replication", async function () {
     await r.downloaded()
 
     for (let i = 0; i < 5; i++) {
-      t.deepEqual(await b.get(i), await a.get(i))
+      expect(await b.get(i)).toEqual(await a.get(i))
     }
 
     await a.append(["f", "g", "h", "i", "j"])
 
     for (let i = 5; i < 10; i++) {
-      t.deepEqual(await b.get(i), await a.get(i))
+      expect(await b.get(i)).toEqual(await a.get(i))
     }
 
     const b2 = await create(a.key)
@@ -73,13 +73,13 @@ test("encrypted replication", async function () {
     await r2.downloaded()
 
     for (let i = 0; i < 5; i++) {
-      t.deepEqual(await b2.get(i), await a.core.blocks.get(i))
+      expect(await b2.get(i)).toEqual(await a.core.blocks.get(i))
     }
 
     await a.append(["f", "g", "h", "i", "j"])
 
     for (let i = 5; i < 10; i++) {
-      t.deepEqual(await b2.get(i), await a.core.blocks.get(i))
+      expect(await b2.get(i)).toEqual(await a.core.blocks.get(i))
     }
   })
 })
@@ -92,18 +92,18 @@ test("encrypted session", async function () {
 
     const s = a.session()
 
-    t.deepEqual(a.encryptionKey, s.encryptionKey)
-    t.deepEqual(await s.get(0), Buffer.from("hello"))
+    expect(a.encryptionKey).toEqual(s.encryptionKey)
+    expect(await s.get(0)).toEqual(Buffer.from("hello"))
 
     await s.append(["world"])
 
     const unencrypted = await s.get(1)
-    t.deepEqual(unencrypted, Buffer.from("world"))
-    t.deepEqual(await a.get(1), unencrypted)
+    expect(unencrypted).toEqual(Buffer.from("world"))
+    expect(await a.get(1)).toEqual(unencrypted)
 
     const encrypted = await s.core.blocks.get(1)
     t.false(encrypted.includes("world"))
-    t.deepEqual(await a.core.blocks.get(1), encrypted)
+    expect(await a.core.blocks.get(1)).toEqual(encrypted)
   })
 })
 
@@ -114,9 +114,9 @@ test("encrypted session before ready core", async function () {
 
     await a.ready()
 
-    t.deepEqual(a.encryptionKey, s.encryptionKey)
+    expect(a.encryptionKey).toEqual(s.encryptionKey)
 
     await a.append(["hello"])
-    t.deepEqual(await s.get(0), Buffer.from("hello"))
+    expect(await s.get(0)).toEqual(Buffer.from("hello"))
   })
 })

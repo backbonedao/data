@@ -16,7 +16,7 @@ test("preload - storage", async function () {
 
     await core.append("hello world")
     t.equal(core.length, 1)
-    t.deepEqual(await core.get(0), Buffer.from("hello world"))
+    expect(await core.get(0)).toEqual(Buffer.from("hello world"))
   })
 })
 

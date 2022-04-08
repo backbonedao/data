@@ -7,8 +7,8 @@ test("encodings - supports built ins", async function () {
     const a = await create(null, { valueEncoding: "json" })
 
     await a.append({ hello: "world" })
-    t.deepEqual(await a.get(0), { hello: "world" })
-    t.deepEqual(await a.get(0, { valueEncoding: "utf-8" }), '{"hello":"world"}')
+    expect(await a.get(0)).toEqual({ hello: "world" })
+    expect(await a.get(0).toEqual({ valueEncoding: "utf-8" }), '{"hello":"world"}')
   })
 })
 
@@ -27,7 +27,7 @@ test("encodings - supports custom encoding", async function () {
 
     await a.append({ hello: "world" })
     t.equal(await a.get(0), "bar")
-    t.deepEqual(await a.get(0, { valueEncoding: "utf-8" }), "foo")
+    expect(await a.get(0).toEqual({ valueEncoding: "utf-8" }), "foo")
   })
 })
 

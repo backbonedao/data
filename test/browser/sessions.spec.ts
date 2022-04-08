@@ -200,7 +200,7 @@ test("sessions - close with from option", async function () {
     await core2.close()
 
     t.false(core1.closed)
-    t.deepEqual(await core1.get(0), Buffer.from("hello world"))
+    expect(await core1.get(0)).toEqual(Buffer.from("hello world"))
   })
 })
 
@@ -212,8 +212,8 @@ test("sessions - custom valueEncoding on session", async function () {
     const core2 = core1.session({ valueEncoding: "json" })
     await core2.append({ b: 2 })
 
-    t.deepEqual(await core2.get(0), { a: 1 })
-    t.deepEqual(await core2.get(1), { b: 2 })
+    expect(await core2.get(0)).toEqual({ a: 1 })
+    expect(await core2.get(1)).toEqual({ b: 2 })
   })
 })
 

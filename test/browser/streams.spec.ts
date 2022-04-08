@@ -12,7 +12,7 @@ test("basic read stream", async function () {
     await core.append(expected)
 
     for await (const data of core.createReadStream()) {
-      t.deepEqual(data.toString(), expected.shift())
+      expect(data.toString()).toEqual(expected.shift())
     }
 
     t.equal(expected.length, 0)
@@ -31,7 +31,7 @@ test("read stream with start / end", async function () {
       const expected = datas.slice(1)
 
       for await (const data of core.createReadStream({ start: 1 })) {
-        t.deepEqual(data.toString(), expected.shift())
+        expect(data.toString()).toEqual(expected.shift())
       }
 
       t.equal(expected.length, 0)
@@ -41,7 +41,7 @@ test("read stream with start / end", async function () {
       const expected = datas.slice(2, 3)
 
       for await (const data of core.createReadStream({ start: 2, end: 3 })) {
-        t.deepEqual(data.toString(), expected.shift())
+        expect(data.toString()).toEqual(expected.shift())
       }
 
       t.equal(expected.length, 0)
@@ -63,7 +63,7 @@ test("basic write+read stream", async function () {
     await new Promise((resolve) => ws.on("finish", resolve))
 
     for await (const data of core.createReadStream()) {
-      t.deepEqual(data.toString(), expected.shift())
+      expect(data.toString()).toEqual(expected.shift())
     }
 
     t.equal(expected.length, 0)

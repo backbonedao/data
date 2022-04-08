@@ -9,7 +9,7 @@ test("userdata - can set through setUserData", async function () {
     const core = await create()
     await core.setUserData("hello", Buffer.from("world"))
 
-    t.deepEqual(await core.getUserData("hello"), Buffer.from("world"))
+    expect(await core.getUserData("hello")).toEqual(Buffer.from("world"))
   })
 })
 
@@ -21,7 +21,7 @@ test("userdata - can set through constructor option", async function () {
       },
     })
 
-    t.deepEqual(await core.getUserData("hello"), Buffer.from("world"))
+    expect(await core.getUserData("hello")).toEqual(Buffer.from("world"))
   })
 })
 
@@ -43,7 +43,7 @@ test("userdata - persists across restarts", async function () {
       },
     })
 
-    t.deepEqual(await core.getUserData("hello"), Buffer.from("world"))
-    t.deepEqual(await core.getUserData("other"), Buffer.from("another"))
+    expect(await core.getUserData("hello")).toEqual(Buffer.from("world"))
+    expect(await core.getUserData("other")).toEqual(Buffer.from("another"))
   })
 })

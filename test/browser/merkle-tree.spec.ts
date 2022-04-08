@@ -339,7 +339,7 @@ test("verify proof #2", async function () {
 
     t.equal(clone.length, tree.length)
     t.equal(clone.byteLength, tree.byteLength)
-    t.deepEqual(await clone.byteRange(10), await tree.byteRange(10))
+    expect(await clone.byteRange(10)).toEqual(await tree.byteRange(10))
   })
 })
 
@@ -479,16 +479,16 @@ test("tree hash", async function () {
     const a = await create(5)
     const b = await create(5)
 
-    t.deepEqual(a.hash(), b.hash())
+    expect(a.hash()).toEqual(b.hash())
 
     {
       const b = a.batch()
-      t.deepEqual(b.hash(), a.hash())
+      expect(b.hash()).toEqual(a.hash())
       b.append(Buffer.from("hi"))
       const h = b.hash()
       t.notDeepEqual(h, a.hash())
       b.commit()
-      t.deepEqual(h, a.hash())
+      expect(h).toEqual(a.hash())
     }
 
     {
@@ -496,9 +496,9 @@ test("tree hash", async function () {
       ba.append(Buffer.from("hi"))
       const h = ba.hash()
       t.notDeepEqual(h, b.hash())
-      t.deepEqual(h, a.hash())
+      expect(h).toEqual(a.hash())
       ba.commit()
-      t.deepEqual(h, b.hash())
+      expect(h).toEqual(b.hash())
     }
   })
 })
@@ -569,7 +569,7 @@ test("get older roots", async function () {
     const a = await create(5)
 
     const roots = await a.getRoots(5)
-    t.deepEqual(roots, a.roots, "same roots")
+    expect(roots).toEqual(a.roots, "same roots")
 
     {
       const b = a.batch()
@@ -580,7 +580,7 @@ test("get older roots", async function () {
     }
 
     const oldRoots = await a.getRoots(5)
-    t.deepEqual(oldRoots, roots, "same old roots")
+    expect(oldRoots).toEqual(roots, "same old roots")
 
     const expected = []
     const len = a.length
@@ -600,7 +600,7 @@ test("get older roots", async function () {
       actual.push(await a.getRoots(len + i))
     }
 
-    t.deepEqual(actual, expected, "check a bunch of different roots")
+    expect(actual).toEqual(expected, "check a bunch of different roots")
   })
 })
 

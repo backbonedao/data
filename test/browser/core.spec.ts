@@ -231,7 +231,7 @@ test("core - update hook is triggered", async function () {
     core.onupdate = (status, bitfield, value, from) => {
       t.equal(status, 0b01, "was appended")
       t.equal(from, null, "was local")
-      t.deepEqual(bitfield, { drop: false, start: 0, length: 4 })
+      expect(bitfield).toEqual({ drop: false, start: 0, length: 4 })
       ran |= 1
     }
 
@@ -247,8 +247,8 @@ test("core - update hook is triggered", async function () {
     clone.onupdate = (status, bitfield, value, from) => {
       t.equal(status, 0b01, "was appended")
       t.equal(from, peer, "was remote")
-      t.deepEqual(bitfield, { drop: false, start: 1, length: 1 })
-      t.deepEqual(value, b4a.from("b"))
+      expect(bitfield).toEqual({ drop: false, start: 1, length: 1 })
+      expect(value).toEqual(b4a.from("b"))
       ran |= 2
     }
 
@@ -264,8 +264,8 @@ test("core - update hook is triggered", async function () {
     clone.onupdate = (status, bitfield, value, from) => {
       t.equal(status, 0b00, "no append or truncate")
       t.equal(from, peer, "was remote")
-      t.deepEqual(bitfield, { drop: false, start: 3, length: 1 })
-      t.deepEqual(value, b4a.from("d"))
+      expect(bitfield).toEqual({ drop: false, start: 3, length: 1 })
+      expect(value).toEqual(b4a.from("d"))
       ran |= 4
     }
 
@@ -280,7 +280,7 @@ test("core - update hook is triggered", async function () {
     core.onupdate = (status, bitfield, value, from) => {
       t.equal(status, 0b10, "was truncated")
       t.equal(from, null, "was local")
-      t.deepEqual(bitfield, { drop: true, start: 1, length: 3 })
+      expect(bitfield).toEqual({ drop: true, start: 1, length: 3 })
       ran |= 8
     }
 
@@ -289,7 +289,7 @@ test("core - update hook is triggered", async function () {
     core.onupdate = (status, bitfield, value, from) => {
       t.equal(status, 0b01, "was appended")
       t.equal(from, null, "was local")
-      t.deepEqual(bitfield, { drop: false, start: 1, length: 1 })
+      expect(bitfield).toEqual({ drop: false, start: 1, length: 1 })
       ran |= 16
     }
 
@@ -298,7 +298,7 @@ test("core - update hook is triggered", async function () {
     clone.onupdate = (status, bitfield, value, from) => {
       t.equal(status, 0b11, "was appended and truncated")
       t.equal(from, peer, "was remote")
-      t.deepEqual(bitfield, { drop: true, start: 1, length: 3 })
+      expect(bitfield).toEqual({ drop: true, start: 1, length: 3 })
       ran |= 32
     }
 
@@ -314,7 +314,7 @@ test("core - update hook is triggered", async function () {
     core.onupdate = (status, bitfield, value, from) => {
       t.equal(status, 0b10, "was truncated")
       t.equal(from, null, "was local")
-      t.deepEqual(bitfield, { drop: true, start: 1, length: 1 })
+      expect(bitfield).toEqual({ drop: true, start: 1, length: 1 })
       ran |= 64
     }
 
@@ -323,7 +323,7 @@ test("core - update hook is triggered", async function () {
     clone.onupdate = (status, bitfield, value, from) => {
       t.equal(status, 0b10, "was truncated")
       t.equal(from, peer, "was remote")
-      t.deepEqual(bitfield, { drop: true, start: 1, length: 1 })
+      expect(bitfield).toEqual({ drop: true, start: 1, length: 1 })
       ran |= 128
     }
 

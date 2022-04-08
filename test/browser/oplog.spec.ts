@@ -53,10 +53,10 @@ test("oplog - basic append", async function () {
         {
           const { header, entries } = await logRd.open()
 
-          t.deepEqual(header, Buffer.from("h"))
+          expect(header).toEqual(Buffer.from("h"))
           t.equal(entries.length, 2)
-          t.deepEqual(entries[0], Buffer.from("a"))
-          t.deepEqual(entries[1], Buffer.from("b"))
+          expect(entries[0]).toEqual(Buffer.from("a"))
+          expect(entries[1]).toEqual(Buffer.from("b"))
         }
 
         await logWr.flush(Buffer.from("i"))
@@ -64,7 +64,7 @@ test("oplog - basic append", async function () {
         {
           const { header, entries } = await logRd.open()
 
-          t.deepEqual(header, Buffer.from("i"))
+          expect(header).toEqual(Buffer.from("i"))
           t.equal(entries.length, 0)
         }
 
@@ -73,9 +73,9 @@ test("oplog - basic append", async function () {
         {
           const { header, entries } = await logRd.open()
 
-          t.deepEqual(header, Buffer.from("i"))
+          expect(header).toEqual(Buffer.from("i"))
           t.equal(entries.length, 1)
-          t.deepEqual(entries[0], Buffer.from("c"))
+          expect(entries[0]).toEqual(Buffer.from("c"))
         }
 
         await cleanup(storage)
@@ -124,21 +124,21 @@ test("oplog - alternating header writes", async function () {
 
       {
         const { header } = await log.open()
-        t.deepEqual(header, Buffer.from("2"))
+        expect(header).toEqual(Buffer.from("2"))
       }
 
       await log.flush(Buffer.from("1")) // Should overwrite first header
 
       {
         const { header } = await log.open()
-        t.deepEqual(header, Buffer.from("1"))
+        expect(header).toEqual(Buffer.from("1"))
       }
 
       await log.flush(Buffer.from("2")) // Should overwrite second header
 
       {
         const { header } = await log.open()
-        t.deepEqual(header, Buffer.from("2"))
+        expect(header).toEqual(Buffer.from("2"))
       }
 
       await cleanup(storage)
@@ -158,21 +158,21 @@ test("oplog - one fully-corrupted header", async function () {
 
       {
         const { header } = await log.open()
-        t.deepEqual(header, Buffer.from("header 1"))
+        expect(header).toEqual(Buffer.from("header 1"))
       }
 
       await log.flush(Buffer.from("header 2"))
 
       {
         const { header } = await log.open()
-        t.deepEqual(header, Buffer.from("header 2"))
+        expect(header).toEqual(Buffer.from("header 2"))
       }
 
       await log.flush(Buffer.from("header 3")) // should overwrite first header
 
       {
         const { header } = await log.open()
-        t.deepEqual(header, Buffer.from("header 3"))
+        expect(header).toEqual(Buffer.from("header 3"))
       }
 
       // Corrupt the first header -- second header should win now
@@ -210,7 +210,7 @@ test("oplog - header invalid checksum", async function () {
 
       {
         const { header } = await log.open()
-        t.deepEqual(header, Buffer.from("b"))
+        expect(header).toEqual(Buffer.from("b"))
       }
 
       // Invalidate the first header's checksum -- second header should win now
@@ -223,7 +223,7 @@ test("oplog - header invalid checksum", async function () {
 
       {
         const { header } = await log.open()
-        t.deepEqual(header, Buffer.from("a"))
+        expect(header).toEqual(Buffer.from("a"))
       }
 
       // Invalidate the second header's checksum -- the hypercore is now corrupted
@@ -278,8 +278,8 @@ test("oplog - malformed log entry gets overwritten", async function () {
         const { entries } = await log.open()
 
         t.equal(entries.length, 2) // The partial entry should not be present
-        t.deepEqual(entries[0], Buffer.from("a"))
-        t.deepEqual(entries[1], Buffer.from("b"))
+        expect(entries[0]).toEqual(Buffer.from("a"))
+        expect(entries[1]).toEqual(Buffer.from("b"))
       }
 
       // Write a valid oplog message now
@@ -289,9 +289,9 @@ test("oplog - malformed log entry gets overwritten", async function () {
         const { entries } = await log.open()
 
         t.equal(entries.length, 3) // The partial entry should not be present
-        t.deepEqual(entries[0], Buffer.from("a"))
-        t.deepEqual(entries[1], Buffer.from("b"))
-        t.deepEqual(entries[2], Buffer.from("c"))
+        expect(entries[0]).toEqual(Buffer.from("a"))
+        expect(entries[1]).toEqual(Buffer.from("b"))
+        expect(entries[2]).toEqual(Buffer.from("c"))
       }
 
       await cleanup(storage)
@@ -325,10 +325,10 @@ test("oplog - log not truncated when header write fails", async function () {
         {
           const { header, entries } = await log.open()
 
-          t.deepEqual(header, Buffer.from("header"))
+          expect(header).toEqual(Buffer.from("header"))
           t.equal(entries.length, 2)
-          t.deepEqual(entries[0], Buffer.from("a"))
-          t.deepEqual(entries[1], Buffer.from("b"))
+          expect(entries[0]).toEqual(Buffer.from("a"))
+          expect(entries[1]).toEqual(Buffer.from("b"))
         }
 
         // Re-enable header writes
@@ -338,7 +338,7 @@ test("oplog - log not truncated when header write fails", async function () {
         {
           const { header, entries } = await log.open()
 
-          t.deepEqual(header, Buffer.from("header two"))
+          expect(header).toEqual(Buffer.from("header two"))
           t.equal(entries.length, 0)
         }
 
@@ -370,7 +370,7 @@ test("oplog - multi append", async function () {
 
       const { header, entries } = await log.open()
 
-      t.deepEqual(header, Buffer.from("a"))
+      expect(header).toEqual(Buffer.from("a"))
       t.deepEqual(entries, [
         Buffer.from("1"),
         Buffer.from("22"),
@@ -415,7 +415,7 @@ test("oplog - multi append is atomic", async function () {
       const { entries } = await log.open()
 
       t.equal(log.length, 1)
-      t.deepEqual(entries, [Buffer.from("0")])
+      expect(entries).toEqual([Buffer.from("0")])
 
       await cleanup(storage)
     })

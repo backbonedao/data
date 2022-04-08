@@ -149,6 +149,6 @@ test("mutex - error propagates", async function () {
     }
 
     t.equal(resolveCount, 1)
-    t.deepEqual(rejectErrors, [err, err, err, err])
+    expect(rejectErrors).toEqual([err, err, err, err])
   })
 })

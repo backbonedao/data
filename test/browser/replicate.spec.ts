@@ -259,10 +259,10 @@ test("basic multiplexing", async function () {
     a.pipe(b).pipe(a)
 
     await a1.append("hi")
-    t.deepEqual(await b1.get(0), Buffer.from("hi"))
+    expect(await b1.get(0)).toEqual(Buffer.from("hi"))
 
     await a2.append("ho")
-    t.deepEqual(await b2.get(0), Buffer.from("ho"))
+    expect(await b2.get(0)).toEqual(Buffer.from("ho"))
   })
 })
 
@@ -289,7 +289,7 @@ test("async multiplexing", async function () {
     await new Promise((resolve) => b2.once("peer-add", resolve))
 
     t.equal(b2.peers.length, 1)
-    t.deepEqual(await b2.get(0), Buffer.from("ho"))
+    expect(await b2.get(0)).toEqual(Buffer.from("ho"))
   })
 })
 
@@ -311,10 +311,10 @@ test("multiplexing with external noise stream", async function () {
     b2.replicate(n2, { keepAlive: false })
 
     await a1.append("hi")
-    t.deepEqual(await b1.get(0), Buffer.from("hi"))
+    expect(await b1.get(0)).toEqual(Buffer.from("hi"))
 
     await a2.append("ho")
-    t.deepEqual(await b2.get(0), Buffer.from("ho"))
+    expect(await b2.get(0)).toEqual(Buffer.from("ho"))
   })
 })
 
@@ -327,7 +327,7 @@ test("seeking while replicating", async function () {
 
     await a.append(["hello", "this", "is", "test", "data"])
 
-    t.deepEqual(await b.seek(6), [1, 1])
+    expect(await b.seek(6)).toEqual([1, 1])
   })
 })
 
@@ -413,9 +413,9 @@ test("replicate discrete range", async function () {
     await r.downloaded()
 
     t.equal(d, 3)
-    t.deepEqual(await b.get(0), Buffer.from("a"))
-    t.deepEqual(await b.get(2), Buffer.from("c"))
-    t.deepEqual(await b.get(3), Buffer.from("d"))
+    expect(await b.get(0)).toEqual(Buffer.from("a"))
+    expect(await b.get(2)).toEqual(Buffer.from("c"))
+    expect(await b.get(3)).toEqual(Buffer.from("d"))
   })
 })
 
