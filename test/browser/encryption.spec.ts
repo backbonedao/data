@@ -21,7 +21,7 @@ test("encrypted append and get", async function () {
     expect(unencrypted).toEqual(Buffer.from("hello"))
 
     const encrypted = await a.core.blocks.get(0)
-    t.false(encrypted.includes("hello"))
+    expect(encrypted.includes("hello")).toBeFalsy()
   })
 })
 
@@ -102,7 +102,7 @@ test("encrypted session", async function () {
     expect(await a.get(1)).toEqual(unencrypted)
 
     const encrypted = await s.core.blocks.get(1)
-    t.false(encrypted.includes("world"))
+    expect(encrypted.includes("world")).toBeFalsy()
     expect(await a.core.blocks.get(1)).toEqual(encrypted)
   })
 })

@@ -7,17 +7,17 @@ test("bitfield - set and get", async function () {
   tape("bitfield - set and get", async function (t) {
     const b = await Bitfield.open(ram())
 
-    t.false(b.get(42))
+    expect(b.get(42)).toBeFalsy()
     b.set(42, true)
     t.ok(b.get(42))
 
     // bigger offsets
-    t.false(b.get(42000000))
+    expect(b.get(42000000)).toBeFalsy()
     b.set(42000000, true)
     t.ok(b.get(42000000))
 
     b.set(42000000, false)
-    t.false(b.get(42000000))
+    expect(b.get(42000000)).toBeFalsy()
 
     await b.flush()
   })

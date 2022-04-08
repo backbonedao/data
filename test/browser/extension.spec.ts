@@ -29,7 +29,7 @@ test("basic extension", async function () {
     bExt.send("world", b.peers[0])
 
     await eventFlush()
-    t.false(messages.length)
+    expect(messages.length).toBeFalsy()
 
   })
 })

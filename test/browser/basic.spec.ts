@@ -123,7 +123,7 @@ test("reopen and overwrite", async function () {
     const overwritten = new Hypercore(open, { overwrite: true })
 
     await overwritten.ready()
-    t.false(b4a.from(overwritten.key).equals(key), "overwrote the core")
+    expect(b4a.from(overwritten.key).equals(key), "overwrote the core").toBeFalsy()
 
     function open(name) {
       if (st[name]) return st[name]
