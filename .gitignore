@@ -8,3 +8,4 @@ tmp
 *.log
 __snapshots__
 dist
+reports.json
