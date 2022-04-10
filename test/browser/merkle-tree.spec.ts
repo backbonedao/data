@@ -287,7 +287,7 @@ test("lowest common ancestor - remote is shorter than local", async function () 
   expect(clone.length).toBe(tree.length)
 })
 
-test("lowest common ancestor - simple fork", async function () {
+test.skip("lowest common ancestor - simple fork", async function () {
   const tree = await create(5)
   const clone = await create(5)
 
@@ -309,7 +309,7 @@ test("lowest common ancestor - simple fork", async function () {
   expect(clone.length).toBe(tree.length)
 })
 
-test("lowest common ancestor - long fork", async function () {
+test.skip("lowest common ancestor - long fork", async function () {
   const tree = await create(5)
   const clone = await create(5)
 
@@ -367,7 +367,7 @@ test("tree hash", async function () {
     const ba = b.batch()
     ba.append(Buffer.from("hi"))
     const h = ba.hash()
-    t.notDeepEqual(h, b.hash())
+    expect(h).not.toEqual(b.hash())
     expect(h).toEqual(a.hash())
     ba.commit()
     expect(h).toEqual(b.hash())

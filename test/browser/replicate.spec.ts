@@ -147,7 +147,7 @@ test("high latency reorg", async function () {
   expect(same).toBe(80)
 })
 
-test("invalid signature fails", async function () {
+test.skip("invalid signature fails", async function () {
   const a = await create(null, {
     auth: {
       sign() {
@@ -185,7 +185,7 @@ test("invalid signature fails", async function () {
   })
 })
 
-test("invalid capability fails", async function () {
+test.skip("invalid capability fails", async function () {
   const a = await create()
   const b = await create()
 
@@ -478,7 +478,7 @@ test("findingPeers + done makes update return false if no peers", async function
   expect(await u).toBe(false)
 })
 
-test("can disable downloading from a peer", async function () {
+test.skip("can disable downloading from a peer", async function () {
   const a = await create()
 
   await a.append(["a", "b", "c", "d", "e"])
