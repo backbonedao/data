@@ -27,7 +27,6 @@ test("oplog - reset storage", async function () {
     // just to make sure to cleanup storage if it failed half way through before
     if (fs.existsSync(STORAGE_FILE_PATH))
       await fs.promises.unlink(STORAGE_FILE_PATH)
-    t.pass("data is reset")
   })
 })
 
@@ -172,11 +171,7 @@ test("oplog - one fully-corrupted header", async function () {
 
     {
       const { header } = await log.open()
-      t.deepEqual(
-        header,
-        Buffer.from("header 2"),
-        "one is corrupted or partially written"
-      )
+      expect(header).toEqual(Buffer.from("header 2"))
     }
 
     await cleanup(storage)
@@ -219,12 +214,7 @@ test("oplog - header invalid checksum", async function () {
       })
     })
 
-    try {
-      await log.open()
-      t.fail("corruption should have been detected")
-    } catch {
-      t.pass("corruption was correctly detected")
-    }
+    expect(async () => log.open()).rejects.toThrow()
 
     await cleanup(storage)
   })
@@ -347,7 +337,7 @@ test("oplog - multi append", async function () {
     const { header, entries } = await log.open()
 
     expect(header).toEqual(Buffer.from("a"))
-    t.deepEqual(entries, [
+    expect(entries).toEqual([
       Buffer.from("1"),
       Buffer.from("22"),
       Buffer.from("333"),
