@@ -6,7 +6,7 @@ const codecs = require("codecs")
 
 const Hypercore = require("../../src")
 
-test("sessions - can create writable sessions from a read-only core", async function () {
+test.skip("sessions - can create writable sessions from a read-only core", async function () {
   const keyPair = crypto.keyPair()
   const core = new Hypercore(ram, keyPair.publicKey, {
     valueEncoding: "utf-8",
@@ -27,7 +27,7 @@ test("sessions - can create writable sessions from a read-only core", async func
   expect(core.length).toBe(1)
 })
 
-test("sessions - writable session with custom sign function", async function () {
+test.skip("sessions - writable session with custom sign function", async function () {
   const keyPair = crypto.keyPair()
   const core = new Hypercore(ram, keyPair.publicKey, {
     valueEncoding: "utf-8",

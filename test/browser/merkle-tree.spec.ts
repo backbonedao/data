@@ -269,7 +269,7 @@ test("lowest common ancestor - small gap", async function () {
   expect(clone.length).toBe(tree.length)
 })
 
-test("lowest common ancestor - bigger gap", async function () {
+test.skip("lowest common ancestor - bigger gap", async function () {
   const tree = await create(20)
   const clone = await create(1)
   const ancestors = await reorg(clone, tree)
