@@ -1,5 +1,4 @@
 import { test, expect } from "@playwright/test"
-const tape = require("purple-tape").test
 const ram = require("random-access-memory")
 const Bitfield = require("../lib/bitfield")
 
