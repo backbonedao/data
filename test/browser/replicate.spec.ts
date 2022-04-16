@@ -518,3 +518,28 @@ test.skip("can disable downloading from a peer", async function () {
   expect(aUploads).toBe(0)
   expect(cUploads).toBe(a.length)
 })
+
+test('Replicated snapshots dont update', async () => {
+  const a = await create()
+  const b = await create(a.key)
+  const c = b.snapshot()
+
+  replicate(b, a)
+  replicate(c, b)
+
+  await a.append("hi")
+  await b.update()
+  await c.update()
+  await eventFlush()
+  expect(a.length).toBe(1)
+  expect(b.length).toBe(1)
+  expect(c.length).toBe(0)
+
+  await a.append("hi2")
+  await b.update()
+  await c.update()
+  await eventFlush()
+  expect(a.length).toBe(2)
+  expect(b.length).toBe(2)
+  expect(c.length).toBe(0)
+})
