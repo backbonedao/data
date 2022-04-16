@@ -461,10 +461,12 @@ module.exports = class Hypercore extends EventEmitter {
     // TODO: add an option where a writer can bootstrap it's state from the network also
     if (this.writable || this.closing !== null) return false
 
+    // Do not update snapshots
+    if (this._snapshot) return false
+
     const activeRequests = (opts && opts.activeRequests) || this.activeRequests
     const req = this.replicator.addUpgrade(activeRequests)
 
-    // TODO: if snapshot, also update the length/byteLength to latest
     return req.promise
   }
 
@@ -493,6 +495,7 @@ module.exports = class Hypercore extends EventEmitter {
   async get (index, opts) {
     if (this.opened === false) await this.opening
     if (this.closing !== null) throw new Error('Session is closed')
+    if (this._snapshot && index >= this._snapshot.length) return null
 
     const c = this.cache && this.cache.get(index)
     if (c) return c
