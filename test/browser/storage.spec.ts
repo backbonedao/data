@@ -1,7 +1,7 @@
 import { test, expect } from "@playwright/test"
 
 const sodium = require("sodium-universal")
-const crypto = require("hypercore-crypto")
+const crypto = require('../../../backbone-crypto')
 const RAM = require("random-access-memory")
 const Hypercore = require("../../src")
 

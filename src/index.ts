@@ -5,7 +5,7 @@ const hypercoreCrypto = require('hypercore-crypto')
 const c = require('compact-encoding')
 const b4a = require('b4a')
 const Xache = require('xache')
-const NoiseSecretStream = require('@hyperswarm/secret-stream')
+const NoiseSecretStream = require('@backbonedao/secret-stream')
 const Protomux = require('protomux')
 const codecs = require('codecs')
 
@@ -38,8 +38,8 @@ module.exports = class Hypercore extends EventEmitter {
 
     if (!opts) opts = {}
 
-    if (!opts.crypto && key && key.byteLength !== 65) {
-      throw new Error('Core key should be 65 bytes')
+    if (!opts.crypto && key && key.byteLength !== 33) {
+      throw new Error('Core key should be 33 bytes')
     }
 
     if (!storage) storage = opts.storage

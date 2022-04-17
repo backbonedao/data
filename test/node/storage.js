@@ -1,5 +1,5 @@
 const test = require('tape')
-const sodium = require('sodium-universal')
+const sodium = require('sodium-javascript')
 const crypto = require('hypercore-crypto')
 const RAM = require('random-access-memory')
 const Hypercore = require('../../src')

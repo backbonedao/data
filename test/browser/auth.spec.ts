@@ -1,7 +1,7 @@
 import { test, expect } from "@playwright/test"
 
 const ram = require("random-access-memory")
-const crypto = require("hypercore-crypto")
+const crypto = require('../../../backbone-crypto')
 const sodium = require("sodium-universal")
 const b4a = require("b4a")
 const { eventFlush, replicate } = require("../helpers")

@@ -1,7 +1,7 @@
 const test = require('tape')
 const ram = require('random-access-memory')
 const crypto = require('hypercore-crypto')
-const sodium = require('sodium-universal')
+const sodium = require('sodium-javascript')
 const b4a = require('b4a')
 const { eventFlush, replicate } = require('../helpers')
 
