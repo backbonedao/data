@@ -1,6 +1,7 @@
+// @ts-nocheck
 const test = require('tape')
 const NoiseSecretStream = require('@hyperswarm/secret-stream')
-const { create, replicate, eventFlush } = require('../helpers')
+const { create, replicate, unreplicate, eventFlush } = require('./helpers')
 
 test('basic replication', async function (t) {
   const a = await create()
@@ -174,7 +175,7 @@ test('invalid signature fails', async function (t) {
   })
 
   s2.on('error', (err) => {
-    t.is(err.message, 'Remote signature does not match')
+    t.is(err.code, 'INVALID_SIGNATURE')
   })
 
   return new Promise((resolve) => {
@@ -206,7 +207,7 @@ test('invalid capability fails', async function (t) {
   })
 
   s2.on('error', (err) => {
-    t.is(err.message, 'Remote sent an invalid capability')
+    t.is(err.code, 'INVALID_CAPABILITY')
   })
 
   return new Promise((resolve) => {
@@ -531,4 +532,253 @@ test.skip('can disable downloading from a peer', async function (t) {
 
   t.is(aUploads, 0)
   t.is(cUploads, a.length)
+})
+
+test('contiguous length', async function (t) {
+  const a = await create()
+
+  await a.append(['a', 'b', 'c', 'd', 'e'])
+  t.is(a.contiguousLength, 5, 'a has all blocks')
+
+  const b = await create(a.key)
+  t.is(b.contiguousLength, 0)
+
+  replicate(a, b, t)
+
+  await b.download({ blocks: [0, 2, 4] }).downloaded()
+  t.is(b.contiguousLength, 1, 'b has 0 through 1')
+
+  await b.download({ blocks: [1] }).downloaded()
+  t.is(b.contiguousLength, 3, 'b has 0 through 2')
+
+  await b.download({ blocks: [3] }).downloaded()
+  t.is(b.contiguousLength, 5, 'b has all blocks')
+})
+
+test('contiguous length after fork', async function (t) {
+  const a = await create()
+  const b = await create(a.key)
+
+  const s = replicate(a, b, t)
+
+  await a.append(['a', 'b', 'c', 'd', 'e'])
+
+  await unreplicate(s)
+
+  await a.truncate(2)
+  await a.append('f')
+  t.is(a.contiguousLength, 3, 'a has all blocks after fork')
+
+  replicate(a, b, t)
+
+  await b.download({ start: 0, end: a.length }).downloaded()
+  t.is(b.contiguousLength, 3, 'b has all blocks after fork')
+})
+
+test('one inflight request to a peer per block', async function (t) {
+  const a = await create()
+  const b = await create(a.key)
+
+  let uploads = 0
+  a.on('upload', function (index) {
+    if (index === 2) uploads++
+  })
+
+  await a.append(['a', 'b', 'c', 'd', 'e'])
+
+  replicate(a, b, t)
+
+  await eventFlush()
+
+  const r1 = b.get(2)
+  await Promise.resolve()
+  const r2 = b.get(2)
+
+  await r1
+  await r2
+
+  t.is(uploads, 1)
+})
+
+test('non-sparse replication', async function (t) {
+  t.plan(2)
+
+  const a = await create()
+  const b = await create(a.key, { sparse: false })
+
+  await a.append(['a', 'b', 'c', 'd', 'e'])
+
+  replicate(a, b, t)
+
+  const download = t.test('download')
+
+  let contiguousLength = 0
+
+  b
+    // The tree length should be updated to the full length when the first block
+    // is downloaded.
+    .once('download', () => download.is(b.core.tree.length, 5))
+
+    // When blocks are downloaded, the reported length should always match the
+    // contiguous length.
+    .on('download', (i) => {
+      download.is(b.length, b.contiguousLength, `block ${i}`)
+    })
+
+    // Appends should only be emitted when the contiguous length is updated and
+    // never when it's zero.
+    .on('append', () => {
+      if (contiguousLength >= b.contiguousLength) {
+        download.fail('append emitted before contiguous length updated')
+      }
+
+      contiguousLength = b.contiguousLength
+    })
+
+  await download
+
+  t.is(contiguousLength, b.length)
+})
+
+test('download blocks if available', async function (t) {
+  const a = await create()
+  const b = await create(a.key)
+
+  replicate(a, b, t)
+
+  await a.append(['a', 'b', 'c', 'd', 'e'])
+
+  let d = 0
+  b.on('download', () => d++)
+
+  const r = b.download({ blocks: [1, 3, 6], ifAvailable: true })
+  await r.downloaded()
+
+  t.is(d, 2)
+})
+
+test('download range if available', async function (t) {
+  const a = await create()
+  const b = await create(a.key)
+
+  replicate(a, b, t)
+
+  await a.append(['a', 'b', 'c', 'd', 'e'])
+
+  let d = 0
+  b.on('download', () => d++)
+
+  const r = b.download({ start: 2, end: 6, ifAvailable: true })
+  await r.downloaded()
+
+  t.is(d, 3)
+})
+
+test('download blocks if available, destroy midway', async function (t) {
+  const a = await create()
+  const b = await create(a.key)
+
+  const s = replicate(a, b, t)
+
+  await a.append(['a', 'b', 'c', 'd', 'e'])
+
+  let d = 0
+  b.on('download', () => {
+    if (d++ === 0) unreplicate(s)
+  })
+
+  const r = b.download({ blocks: [1, 3, 6], ifAvailable: true })
+  await r.downloaded()
+
+  t.pass('range resolved')
+})
+
+test('download blocks available from when only a partial set is available', async function (t) {
+  const a = await create()
+  const b = await create(a.key)
+  const c = await create(a.key)
+
+  replicate(a, b, t)
+  replicate(b, c, t)
+
+  await a.append(['a', 'b', 'c', 'd', 'e'])
+
+  await b.get(2)
+  await b.get(3)
+
+  const r = c.download({ start: 0, end: -1, ifAvailable: true })
+  await r.downloaded()
+
+  t.ok(!(await c.has(0)))
+  t.ok(!(await c.has(1)))
+  t.ok(await c.has(2))
+  t.ok(await c.has(3))
+  t.ok(!(await c.has(4)))
+})
+
+test('download range resolves immediately if no peers', async function (t) {
+  const a = await create()
+  const b = await create(a.key)
+
+  // no replication
+
+  const r = b.download({ start: 0, end: 5, ifAvailable: true })
+  await r.downloaded()
+
+  t.pass('range resolved')
+})
+
+test('download available blocks on non-sparse update', async function (t) {
+  const a = await create()
+  const b = await create(a.key, { sparse: false })
+
+  replicate(a, b, t)
+
+  await a.append(['a', 'b', 'c', 'd', 'e'])
+  await b.update()
+
+  t.is(b.contiguousLength, b.length)
+})
+
+test('non-sparse snapshot during replication', async function (t) {
+  const a = await create()
+  const b = await create(a.key, { sparse: false })
+
+  replicate(a, b, t)
+
+  await a.append(['a', 'b', 'c', 'd', 'e'])
+  await b.update()
+
+  const s = b.snapshot()
+
+  await a.append(['f', 'g', 'h', 'i', 'j'])
+  await s.update()
+
+  t.is(s.contiguousLength, s.length)
+})
+
+test('non-sparse snapshot during partial replication', async function (t) {
+  const a = await create()
+  const b = await create(a.key)
+  const c = await create(a.key, { sparse: false })
+
+  replicate(a, b, t)
+  replicate(b, c, t)
+
+  await a.append(['a', 'b', 'c', 'd', 'e'])
+
+  await b.download({ start: 0, end: 3 }).downloaded()
+  await c.update()
+
+  const s = c.snapshot()
+  t.is(s.contiguousLength, s.length)
+
+  await s.update()
+  t.is(s.contiguousLength, s.length)
+
+  await b.download({ start: 3, end: 5 }).downloaded()
+  t.is(s.contiguousLength, s.length)
+
+  await s.update()
+  t.is(s.contiguousLength, s.length)
 })
