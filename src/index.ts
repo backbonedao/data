@@ -19,7 +19,7 @@ const Core = require('../lib/core')
 const BlockEncryption = require('../lib/block-encryption')
 const { ReadStream, WriteStream } = require('../lib/streams')
 const { convert0xToHKey } = require('../lib/common')
-const { BAD_ARGUMENT, SESSION_CLOSED, SESSION_NOT_WRITABLE, SNAPSHOT_NOT_AVAILABLE } = require('./lib/errors')
+const { BAD_ARGUMENT, SESSION_CLOSED, SESSION_NOT_WRITABLE, SNAPSHOT_NOT_AVAILABLE } = require('../lib/errors')
 
 const promises = Symbol.for('hypercore.promises')
 const inspect = Symbol.for('nodejs.util.inspect.custom')

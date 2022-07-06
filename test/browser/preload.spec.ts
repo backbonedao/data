@@ -2,7 +2,7 @@ import { test, expect } from "@playwright/test"
 
 const ram = require("random-access-memory")
 const Hypercore = require("../../src")
-const crypto = require('../../../backbone-crypto')
+const crypto = require('hypercore-crypto')
 const b4a = require("b4a")
 
 test("preload - storage", async function () {

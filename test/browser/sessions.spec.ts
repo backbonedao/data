@@ -1,7 +1,7 @@
 import { test, expect } from "@playwright/test"
 
 const ram = require("random-access-memory")
-const crypto = require('../../../backbone-crypto')
+const crypto = require('hypercore-crypto')
 const codecs = require("codecs")
 
 const Hypercore = require("../../src")
